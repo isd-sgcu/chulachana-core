@@ -1,4 +1,4 @@
-const {InfluxDB} = require('@influxdata/influxdb-client')
+import { InfluxDB } from '@influxdata/influxdb-client'
 
 // You can generate a Token from the "Tokens Tab" in the UI
 // These constants are to be changed (using docker environment variables)
@@ -13,14 +13,6 @@ const username = process.env.INFLUX_USERNAME
 /**InfluxDB password  */
 const password = process.env.INFLUX_PASSWORD
 
-const client = new InfluxDB({url, token: token})
+const client = new InfluxDB({ url, token })
 
-module.exports = {
-  url,
-  token,
-  org,
-  bucket,
-  username,
-  password,
-  client,
-}
+export { url, token, org, bucket, username, password, client }
