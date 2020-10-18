@@ -2,9 +2,9 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
-import { Point, HttpError } from '@influxdata/influxdb-client'
-import { client, org, bucket } from '../../utils/db_env'
-import { hostname } from 'os'
+import { ApiError, CheckInDto } from '../../utils/types'
+import { checkin } from '../../api/checkin'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 /*
  * Check In API
@@ -29,62 +29,13 @@ import { hostname } from 'os'
  * 404: Invalid Method
  * 500: Internal Server (When writing into database)
  */
-export default (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    // Input Validation
-    // TODO: Phone Number Validate
-    if (
-      !req.body.phone ||
-      !req.body.type ||
-      !(req.body.type === 'normal' || req.body.type === 'staff')
-    ) {
-      res.statusCode = 400
-      res.setHeader('Content-Type', 'application/json')
-      res.end(JSON.stringify({ message: 'Bad Request' }))
-      return
-    }
-
-    // Initialize
-    const writeApi = client.getWriteApi(org, bucket, 'ns')
-    writeApi.useDefaultTags({
-      host: hostname(),
-      location: 'API',
-      action: 'checkin',
-    }) // Not sure if host & location tags should be included
-
-    // Data Assigning
-    const point = new Point('user')
-      .tag('phone', req.body.phone)
-      .tag('type', req.body.type)
-      .booleanField('checked_in', true)
-      .timestamp(new Date())
-
-    // Database Writing
-    writeApi.writePoint(point)
-    writeApi
-      .close()
-      .then(() => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({ message: 'Success' }))
-        return
-      })
-      .catch((e) => {
-        console.error(e)
-        if (e instanceof HttpError && e.statusCode === 401) {
-          // Needs running setup script
-          console.log('Need to setup a new InfluxDB database.')
-        }
-        res.statusCode = 500
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({ message: 'Internal Error' }))
-        return
-      })
+    const body = req.body as CheckInDto
+    await checkin(body)
+    res.send('Success')
   } else {
     // Other than POST Method
-    res.statusCode = 404
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ message: 'Not Found' }))
-    return
+    throw new ApiError(404, 'Not Found')
   }
 }
