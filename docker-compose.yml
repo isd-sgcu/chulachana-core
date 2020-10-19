@@ -4,3 +4,5 @@ services:
     image: "grafana/grafana"
     ports:
       - 9091:3000
+    volumes:
+      - ./volumes/grafana:/var/lib/grafana
