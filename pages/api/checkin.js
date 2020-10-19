@@ -2,9 +2,10 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
-const {InfluxDB, Point, HttpError} = require('@influxdata/influxdb-client')
-const {client, org, bucket} = require('../../utils/db_env')
-const {hostname} = require('os')
+const { InfluxDB, Point, HttpError } = require('@influxdata/influxdb-client')
+const { databaseUrl, organization, token, bucketPrefix } = require('../../utils/db_env')
+const { hostname } = require('os')
+const url = require('url');
 
 /*
  * Check In API
@@ -13,6 +14,7 @@ const {hostname} = require('os')
  * <--Request-->
  * Content-Type: application/json
  * Body: {
+ *  eventid: string
  *  phone: string
  *  type: string ("normal" / "staff")
  * }
@@ -32,23 +34,25 @@ const {hostname} = require('os')
 export default (req, res) => {
     if (req.method === 'POST') {
 
+        const query = url.parse(req.url, true).query
+
         // Input Validation
         // TODO: Phone Number Validate
-        if (!req.body.phone || !req.body.type || !(req.body.type === "normal" || req.body.type === "staff")) {
-            res.statusCode = 400
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ message: 'Bad Request' }))
-            return
+        if (!query.eventid || !query.phone || !query.type || !(query.type === "normal" || query.type === "staff")) {
+            res.writeHead(400, {'Content-Type': 'text/html'})
+            res.end('Bad Request')
+            return resolve()
         }
 
         // Initialize
-        const writeApi = client.getWriteApi(org, bucket, 'ns')
-        writeApi.useDefaultTags({host: hostname(), location: "API", action: "checkin"})        // Not sure if host & location tags should be included
+        const client = new InfluxDB({url: databaseUrl, token: token})
+        const writeApi = client.getWriteApi(organization, bucketPrefix + query.eventid, 'ns')
+        writeApi.useDefaultTags({_host: hostname(), _location: "API", action: "checkin"})        // Not sure if host & location tags should be included
 
         // Data Assigning
         const point = new Point('user')
-            .tag('phone', req.body.phone)
-            .tag('type', req.body.type)
+            .tag('phone', query.phone)
+            .tag('type', query.type)
             .booleanField('checked_in', true)
             .timestamp(new Date())
 
@@ -57,10 +61,9 @@ export default (req, res) => {
         writeApi
             .close()
             .then(() => {
-                res.statusCode = 200
-                res.setHeader('Content-Type', 'application/json')
-                res.end(JSON.stringify({ message: 'Success' }))
-                return
+                res.writeHead(200, {'Content-Type': 'text/html'})
+                res.end('Success')
+                return resolve()
             })
             .catch(e => {
                 console.error(e)
@@ -68,17 +71,15 @@ export default (req, res) => {
                     // Needs running setup script
                     console.log('Need to setup a new InfluxDB database.')
                 }
-                res.statusCode = 500
-                res.setHeader('Content-Type', 'application/json')
-                res.end(JSON.stringify({ message: 'Internal Error' }))
-                return
+                res.writeHead(500, {'Content-Type': 'text/html'})
+                res.end('Internal Error')
+                return resolve()
             })
 
     } else {
         // Other than POST Method
-        res.statusCode = 404
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({ message: 'Not Found' }))
-        return
+        res.writeHead(404, {'Content-Type': 'text/html'})
+        res.end('Not Found')
+        return resolve()
     }
 }
