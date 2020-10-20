@@ -8,4 +8,14 @@ const bucketPrefix = process.env.DB_BUCKET_PREFIX
 const username = process.env.DB_USERNAME
 const password = process.env.DB_PASSWORD
 
-export { databaseURL, token, organization, bucketPrefix, username, password }
+const client = new InfluxDB({ url: databaseURL, token: token })
+
+export {
+  databaseURL,
+  token,
+  organization,
+  bucketPrefix,
+  username,
+  password,
+  client,
+}

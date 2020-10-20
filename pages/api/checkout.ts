@@ -4,11 +4,12 @@
 
 import { ApiError, CheckDto } from '../../utils/types'
 import { check } from '../../api/check'
+import { queryLast } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 /*
  * Check In API
- * POST /api/checkin
+ * POST /api/checkout
  *
  * <--Request-->
  * Content-Type: application/json
@@ -21,7 +22,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
  * <--Response-->
  * Content-Type: application/json
  * Body: {
- *  checkin: Date    // Return Checkin Date&Time in ISO8601 Format (UTC)
+ *  checkin: Date       // Return Checkin Date&Time in ISO8601 Format (UTC)
+ *  checkout: Date      // Return Checkout Date&Time in ISO8601 Format (UTC)
  * }
  *
  * <--Status Code-->
@@ -33,8 +35,17 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const body = req.body as CheckDto
-    const checkinDate = await check(body, true)
-    res.json({ checkin: checkinDate })
+    let checkinDate: Date
+    try {
+      checkinDate = (await queryLast(body.eventid, body.phone, body.type))._time
+    } catch (e) {
+      checkinDate = null
+    }
+    const checkoutDate = await check(body, false)
+    res.json({
+      checkin: checkinDate,
+      checkout: checkoutDate,
+    })
   } else {
     // Other than POST Method
     throw new ApiError(404, 'Not Found')
