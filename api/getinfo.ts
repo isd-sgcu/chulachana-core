@@ -1,8 +1,8 @@
-import { ApiError, PointInfoDto } from '../utils/types'
+import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
 import { organization, bucketPrefix, client } from '../utils/db_env'
 import { HttpError } from '@influxdata/influxdb-client'
 
-export async function getInfo(eventid: string): Promise<unknown> {
+export async function getInfo(eventid: string): Promise<EventInfoDto> {
   const queryApi = client.getQueryApi(organization)
   const query = `
   from(bucket: "${bucketPrefix + eventid}")
@@ -24,5 +24,9 @@ export async function getInfo(eventid: string): Promise<unknown> {
     console.log(e)
     throw new ApiError(500, 'Internal Error')
   }
-  return Object.fromEntries(map)
+  return {
+    name: map.get('name'),
+    primaryColor: map.get('primary-color'),
+    secondaryColor: map.get('secondary-color'),
+  }
 }

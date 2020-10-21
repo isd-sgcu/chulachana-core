@@ -1,0 +1,16 @@
+import React, { useCallback } from 'react'
+import { TextField, TextFieldProps } from '@material-ui/core'
+
+const NumberTextField: React.FC<
+  TextFieldProps & { onChange: (...value: any[]) => void }
+> = ({ onChange, ...props }) => {
+  const onChangeFilterNumber = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value.replace(/\D/, ''))
+    },
+    [onChange]
+  )
+  return <TextField onChange={onChangeFilterNumber} {...props} />
+}
+
+export { NumberTextField }
