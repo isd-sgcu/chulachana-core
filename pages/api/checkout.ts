@@ -50,12 +50,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
 
-    const lastPoint = (await queryLast(
+    const lastCheckinPoint = (await queryLast(
       body.eventid,
       body.phone,
-      body.type
+      body.type,
+      'checkin'
     )) as PointUserDto
-    const checkinDate = lastPoint ? lastPoint._time : null
+    const checkinDate = lastCheckinPoint ? lastCheckinPoint._time : null
     const checkoutDate = await check(body.eventid, body.phone, body.type, false)
     res.json({
       checkin: checkinDate,

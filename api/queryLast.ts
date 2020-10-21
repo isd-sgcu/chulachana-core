@@ -5,13 +5,15 @@ import { HttpError } from '@influxdata/influxdb-client'
 export async function queryLast(
   eventid: string,
   phone: string,
-  type: string
+  type: string,
+  action?: string
 ): Promise<PointUserDto> {
   const queryApi = client.getQueryApi(organization)
+  const optionalFilter = action ? `and r["action"] == "${action}"` : ``
   const query = `
   from(bucket: "${bucketPrefix + eventid}")
     |> range(start: 0, stop: now())
-    |> filter(fn: (r) => r["_measurement"] == "user" and r["phone"] == "${phone}" and r["type"] == "${type}")
+    |> filter(fn: (r) => r["_measurement"] == "user" and r["phone"] == "${phone}" and r["type"] == "${type}" ${optionalFilter})
     |> group()
     |> last()
     |> yield()
