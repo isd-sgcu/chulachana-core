@@ -6,6 +6,7 @@ import { ApiError } from '../../utils/types'
 import { getInfo } from '../../api/getinfo'
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as url from 'url'
+import validator from 'validator'
 
 /*
  * Event Info API
@@ -13,7 +14,7 @@ import * as url from 'url'
  * Get all event meta-data inside the database
  *
  * <--Query-->
- * [Required] eventid: string
+ * [Required] eventid: string   // All alpha-numberic
  *
  * <--Response-->
  * Actually return every info about the event inserted in InfluxDB
@@ -34,7 +35,11 @@ import * as url from 'url'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const query = url.parse(req.url, true).query
-    if (!query.eventid || typeof query.eventid != 'string') {
+    if (
+      !query.eventid ||
+      typeof query.eventid != 'string' ||
+      !validator.isAlphanumeric(query.eventid)
+    ) {
       throw new ApiError(400, 'Invalid EventID')
     }
     res.json(await getInfo(query.eventid))

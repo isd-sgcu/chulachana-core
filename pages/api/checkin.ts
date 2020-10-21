@@ -5,6 +5,7 @@
 import { ApiError, CheckDto } from '../../utils/types'
 import { check } from '../../api/check'
 import { NextApiRequest, NextApiResponse } from 'next'
+import validator from 'validator'
 
 /*
  * Check In API
@@ -13,8 +14,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
  * <--Request-->
  * Content-Type: application/json
  * Body: {
- *  eventid: string
- *  phone: string
+ *  eventid: string   // All alpha-numeric
+ *  phone: string     // TH Mobile Phone format without dash (0xxxxxxxx)
  *  type: "normal" | "staff" | "shop"
  * }
  *
@@ -33,12 +34,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const body = req.body as CheckDto
-    // Input Validation
-    // TODO: Phone Number Validate
-    // TODO: use a validation library
     if (
       !body.eventid ||
+      !validator.isAlphanumeric(body.eventid) ||
       !body.phone ||
+      !validator.isMobilePhone(body.phone, 'th-TH', { strictMode: false }) ||
       !body.type ||
       !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
     ) {
