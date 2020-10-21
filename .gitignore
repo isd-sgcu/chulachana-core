@@ -33,5 +33,8 @@ yarn-error.log*
 # vercel
 .vercel
 
+# secrets
+.env
+
 # docker
 /volumes
