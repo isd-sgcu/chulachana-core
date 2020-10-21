@@ -17,7 +17,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - ./volumes:/var/lib/influxdb2
+      - ./volumes/influxdb:/var/lib/influxdb2
     command: bash -c 'influxd run --bolt-path /var/lib/influxdb2/influxd.bolt --engine-path /var/lib/influxdb2/engine --store bolt'
 #
 # Please run the following line after docker-compose up in a new terminal
