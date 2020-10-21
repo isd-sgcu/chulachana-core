@@ -15,7 +15,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
  * Body: {
  *  eventid: string
  *  phone: string
- *  type: string ("normal" / "staff")
+ *  type: "normal" | "staff" | "shop"
  * }
  *
  * <--Response-->
@@ -33,7 +33,19 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const body = req.body as CheckDto
-    const checkinDate = await check(body, true)
+    // Input Validation
+    // TODO: Phone Number Validate
+    // TODO: use a validation library
+    if (
+      !body.eventid ||
+      !body.phone ||
+      !body.type ||
+      !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
+    ) {
+      throw new ApiError(400, 'Invalid eventid, type, or phone number')
+    }
+
+    const checkinDate = await check(body.eventid, body.phone, body.type, true)
     res.json({ checkin: checkinDate })
   } else {
     // Other than POST Method

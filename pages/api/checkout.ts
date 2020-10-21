@@ -2,7 +2,7 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
-import { ApiError, CheckDto } from '../../utils/types'
+import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
 import { check } from '../../api/check'
 import { queryLast } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -16,14 +16,14 @@ import { NextApiRequest, NextApiResponse } from 'next'
  * Body: {
  *  eventid: string
  *  phone: string
- *  type: string ("normal" / "staff")
+ *  type: "normal" | "staff" | "shop"
  * }
  *
  * <--Response-->
  * Content-Type: application/json
  * Body: {
- *  checkin: Date       // Return Checkin Date&Time in ISO8601 Format (UTC)
- *  checkout: Date      // Return Checkout Date&Time in ISO8601 Format (UTC)
+ *  checkin: Date | null    // Return Checkin Date&Time in ISO8601 Format (UTC) (null if the phone hadn't checkin once)
+ *  checkout: Date          // Return Checkout Date&Time in ISO8601 Format (UTC)
  * }
  *
  * <--Status Code-->
@@ -35,13 +35,25 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const body = req.body as CheckDto
-    let checkinDate: Date
-    try {
-      checkinDate = (await queryLast(body.eventid, body.phone, body.type))._time
-    } catch (e) {
-      checkinDate = null
+    // Input Validation
+    // TODO: Phone Number Validate
+    // TODO: use a validation library
+    if (
+      !body.eventid ||
+      !body.phone ||
+      !body.type ||
+      !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
+    ) {
+      throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
-    const checkoutDate = await check(body, false)
+
+    const lastPoint = (await queryLast(
+      body.eventid,
+      body.phone,
+      body.type
+    )) as PointUserDto
+    const checkinDate = lastPoint ? lastPoint._time : null
+    const checkoutDate = await check(body.eventid, body.phone, body.type, false)
     res.json({
       checkin: checkinDate,
       checkout: checkoutDate,

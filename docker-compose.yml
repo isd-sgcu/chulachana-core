@@ -17,6 +17,11 @@ services:
 # Please run the following line after docker-compose up in a new terminal
 # docker exec -it influxdb-container bash -c 'influx setup -b $DB_INIT_BUCKET -f -o $DB_ORG -p $DB_PASSWORD -u $DB_USERNAME -t $DB_TOKEN'
 #
-# and then if any more bucket is needed to be added other than $DB_INIT_BUCKET, please run the following line
+# And then if any more bucket is needed to be added other than $DB_INIT_BUCKET, please run the following line
 # docker exec -it influxdb-container bash -c 'influx bucket create -o $DB_ORG -n ${DB_BUCKET_PREFIX}"001" -t $DB_TOKEN'
 # 001 could be any eventID for API to access
+#
+# (Optional, depending on each event meta-data)
+# Finally insert event meta-data for the created eventid by either executing into the container or using InfluxDB GUI
+# docker exec -it influxdb-container bash
+# influx write -o $DB_ORG -b ${DB_BUCKET_PREFIX}"001" -p ns -t $DB_TOKEN 'info name="ลอยกระทงจุฬาฯ 63",primary-color="FFFFFF",secondary-color="000000"'

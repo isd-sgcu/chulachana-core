@@ -1,18 +1,13 @@
-import { ApiError, CheckDto, PointDto } from '../utils/types'
+import { ApiError, CheckDto, PointUserDto } from '../utils/types'
 import { Point, HttpError } from '@influxdata/influxdb-client'
 import { organization, bucketPrefix, client } from '../utils/db_env'
-import { hostname } from 'os'
 
-export async function check(body: CheckDto, isCheckin: boolean): Promise<Date> {
-  const { eventid, phone, type } = body
-
-  // Input Validation
-  // TODO: Phone Number Validate
-  // TODO: use a validation library
-  if (!eventid || !phone || !type || !(type === 'normal' || type === 'staff')) {
-    throw new ApiError(400, 'Invalid eventid, type, or phone number')
-  }
-
+export async function check(
+  eventid: string,
+  phone: string,
+  type: string,
+  isCheckin: boolean
+): Promise<Date> {
   // Initialize
   const writeApi = client.getWriteApi(
     organization,
@@ -21,22 +16,19 @@ export async function check(body: CheckDto, isCheckin: boolean): Promise<Date> {
   )
 
   // Data Assigning
-  const pointDto = <PointDto>{
+  const pointDto = <PointUserDto>{
     _time: new Date(),
     _measurement: 'user',
-    _host: hostname(),
-    _location: 'API',
+    eventid: eventid,
+    phone: phone,
+    type: type,
     action: isCheckin ? 'checkin' : 'checkout',
     _field: 'in_event',
     _value: isCheckin,
   }
 
-  writeApi.useDefaultTags({
-    _host: pointDto._host,
-    _location: pointDto._location,
-    action: pointDto.action,
-  })
   const point = new Point(pointDto._measurement)
+    .tag('action', pointDto.action)
     .tag('phone', pointDto.phone)
     .tag('type', pointDto.type)
     .booleanField(pointDto._field, pointDto._value)
