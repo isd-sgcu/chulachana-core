@@ -2,14 +2,16 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
-import { ApiError, CheckDto } from '../../utils/types'
+import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
 import { check } from '../../api/check'
+import { queryLast } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 
 /*
  * Check In API
- * POST /api/checkin
+ * POST /api/autocheck
+ * Query the database first, then checkin/checkout appropriately
  *
  * <--Request-->
  * Content-Type: application/json
@@ -22,7 +24,8 @@ import validator from 'validator'
  * <--Response-->
  * Content-Type: application/json
  * Body: {
- *  checkin: Date    // Return Checkin Date&Time in ISO8601 Format (UTC)
+ *  checkin: Date           // Return Checkin Date&Time in ISO8601 Format (UTC)
+ *  checkout: Date | null   // Return Checkout Date&Time in ISO8601 Format (UTC) (null if auto-checkin)
  * }
  *
  * <--Status Code-->
@@ -46,8 +49,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
 
-    const checkinDate = await check(body.eventid, body.phone, body.type, true)
-    res.json({ checkin: checkinDate })
+    // Querying last action
+    const lastPoint = (await queryLast(
+      body.eventid,
+      body.phone,
+      body.type
+    )) as PointUserDto
+
+    let checkinDate: Date
+    let checkoutDate: Date
+
+    // Check if the phone is either not registered yet or the phone's 'in_event' is false
+    if (!lastPoint || !lastPoint._value) {
+      checkinDate = await check(body.eventid, body.phone, body.type, true)
+      checkoutDate = null
+    } else {
+      checkinDate = lastPoint._time
+      checkoutDate = await check(body.eventid, body.phone, body.type, false)
+    }
+
+    res.json({
+      checkin: checkinDate,
+      checkout: checkoutDate,
+    })
   } else {
     // Other than POST Method
     throw new ApiError(404, 'Not Found')

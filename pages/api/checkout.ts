@@ -37,8 +37,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const body = req.body as CheckDto
     // Input Validation
-    // TODO: Phone Number Validate
-    // TODO: use a validation library
     if (
       !body.eventid ||
       !validator.isAlphanumeric(body.eventid) ||

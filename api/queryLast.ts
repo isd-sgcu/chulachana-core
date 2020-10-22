@@ -15,7 +15,7 @@ export async function queryLast(
     |> range(start: 0, stop: now())
     |> filter(fn: (r) => r["_measurement"] == "user" and r["phone"] == "${phone}" and r["type"] == "${type}" ${optionalFilter})
     |> group()
-    |> last()
+    |> top(columns: ["_time"], n: 1)
     |> yield()
   `
   try {
