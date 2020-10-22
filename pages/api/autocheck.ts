@@ -4,7 +4,7 @@
 
 import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
 import { check } from '../../api/check'
-import { queryLast } from '../../api/queryLast'
+import { queryLastWithoutCheckAction } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 
@@ -50,7 +50,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Querying last action
-    const lastPoint = (await queryLast(
+    const lastPoint = (await queryLastWithoutCheckAction(
       body.eventid,
       body.phone,
       body.type
