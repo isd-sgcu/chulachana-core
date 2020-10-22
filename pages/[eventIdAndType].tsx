@@ -13,7 +13,7 @@ import { NumberTextField } from '../components/NumberTextField'
 import Router from 'next/router'
 import Cookies from 'cookies'
 import { check } from '../api/check'
-import { queryLast } from '../api/queryLast'
+import { queryLast, queryLastWithoutCheckAction } from '../api/queryLast'
 
 const phoneRegex = /^[0-9]{9,10}$/
 
@@ -124,7 +124,9 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
       } else if (action === 'checkin') {
         searchAction = 'checkout'
       }
-      const lastResult = await queryLast(eventId, phone, type, searchAction)
+      const lastResult = searchAction
+        ? await queryLast(eventId, phone, type, searchAction)
+        : await queryLastWithoutCheckAction(eventId, phone, type)
       // check out if last action is check in
       const checkIn = lastResult?.action !== 'checkin'
       const currentDate = await check(eventId, phone, type, checkIn)
