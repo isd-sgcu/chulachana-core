@@ -26,6 +26,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    textAlign: 'center',
     paddingTop: 72,
   },
   successMessage: {
@@ -64,6 +65,24 @@ function SuccessPage({
     return `${dm} ${y} เวลา ${hhmm} น.`
   }, [checkInDate])
 
+  const checkInDuration = useMemo(() => {
+    if (!checkInDate || !checkOutDate) {
+      return null
+    }
+    const seconds = (checkOutDate - checkInDate) / 1000
+    const totalMinutes = Math.ceil(seconds / 60)
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+    const res = []
+    if (hours > 0) {
+      res.push(`${hours} ชั่วโมง`)
+    }
+    if (minutes > 0) {
+      res.push(`${minutes} นาที`)
+    }
+    return res.join(' ')
+  }, [checkInDate, checkOutDate])
+
   return (
     <EventProvider eventInfo={eventInfo}>
       <PageLayout wavesComponent={SuccessPageWaves}>
@@ -77,7 +96,16 @@ function SuccessPage({
             eventInfo={eventInfo}
             type={type}
           />
-          <p className={classes.timestamp}>{checkInTime}</p>
+          <p className={classes.timestamp}>
+            {isCheckOut && 'เช็คอินเมื่อ: '}
+            {checkInTime}
+            {isCheckOut && checkInDuration && (
+              <>
+                <br />
+                ระยะเวลาเช็คอิน: {checkInDuration}
+              </>
+            )}
+          </p>
           <Link
             href={`/[eventIdAndType]?action=${
               isCheckOut ? 'checkin' : 'checkout'
