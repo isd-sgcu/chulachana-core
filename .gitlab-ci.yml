@@ -8,7 +8,7 @@ build_dev:
   only:
     - dev
   script:
-    - echo "$STAGING_ENV" > .env.local
+    - echo "$ENV_STAGING" > .env.local
     - yarn install --cache-folder .yarn
     - yarn build
   cache:
