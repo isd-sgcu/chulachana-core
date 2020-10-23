@@ -1,0 +1,33 @@
+stages:
+  - build
+  - deploy
+
+build_dev:
+  stage: build
+  image: node:12.19.0
+  only:
+    - dev
+  script:
+    - echo "$STAGING_ENV" > .env.local
+    - yarn install --cache-folder .yarn
+    - yarn build
+  cache:
+    paths:
+      - node_modules/
+      - .yarn
+  artifacts:
+    paths:
+      - .next
+      - package.json
+      - public
+      - .env.local
+
+deploy_dev:
+  stage: deploy
+  image: google/cloud-sdk
+  only:
+    - dev
+  script:
+    - echo "$SERVICE_ACCOUNT_KEY" > key.json
+    - gcloud auth activate-service-account --key-file=key.json
+    - gcloud app deploy app.yaml --quiet --project=chula-chana
