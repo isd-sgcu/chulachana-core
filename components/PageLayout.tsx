@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       display: 'flex',
       justifyContent: 'center',
-      padding: 28,
+      padding: 'clamp(28px, 10vh, 116px)',
+      paddingLeft: 28,
+      paddingRight: 28,
+      fallbacks: {
+        padding: 28,
+      },
     },
     paper: {
       height: 532,
@@ -46,9 +51,13 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       right: 0,
       bottom: 0,
-      height: 99,
       overflow: 'hidden',
       zIndex: -1,
+      '@global': {
+        svg: {
+          marginBottom: -8,
+        },
+      },
     },
     bottomCorner: {
       height: 4,
