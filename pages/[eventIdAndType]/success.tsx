@@ -141,6 +141,14 @@ export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
     const cookies = new Cookies(req, res)
     const checkInDate = parseInt(cookies.get('checkInDate'))
     const checkOutDate = parseInt(cookies.get('checkOutDate'))
+    if (!checkInDate) {
+      return {
+        unstable_redirect: {
+          permanent: false,
+          destination: `/${eventIdAndType}`,
+        },
+      }
+    }
     return { props: { checkInDate, checkOutDate, eventIdAndType, eventInfo } }
   }
 )
