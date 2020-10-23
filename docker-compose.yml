@@ -4,9 +4,15 @@ services:
     container_name: chulachana-grafana
     image: 'grafana/grafana'
     ports:
-      - 9091:3000
+      - 80:3000
     volumes:
       - ./volumes/grafana:/var/lib/grafana
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.grafana.entrypoints=websecure'
+      - 'traefik.http.routers.grafana.rule=Host(`mon.cucheck.in`)'
+      - 'traefik.http.routers.grafana.tls=true'
+      - 'traefik.http.routers.grafana.tls.certresolver=myhttpchallenge'
   influxdb:
     container_name: chulachana-influxdb
     image: quay.io/influxdb/influxdb:2.0.0-rc
