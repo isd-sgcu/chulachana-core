@@ -14,6 +14,7 @@ import Router from 'next/router'
 import Cookies from 'cookies'
 import { check } from '../api/check'
 import { queryLast, queryLastWithoutCheckAction } from '../api/queryLast'
+import Head from 'next/head'
 
 const phoneRegex = /^[0-9]{9,10}$/
 
@@ -59,6 +60,9 @@ function CheckInPage({ eventIdAndType, eventInfo }: CheckInPageProps) {
 
   return (
     <EventProvider eventInfo={eventInfo}>
+      <Head>
+        <title>เช็คอินเข้างาน {eventInfo.name}</title>
+      </Head>
       <PageLayout wavesComponent={CheckInFormWaves}>
         <h3 className={classes.checkInHint}>เช็คอินเข้างาน:</h3>
         <EventTitle eventInfo={eventInfo} type={type} />

@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { EventInfoDto, parseEventId } from '../../utils/types'
 import Cookies from 'cookies'
 import { getInfo } from '../../api/getinfo'
+import Head from 'next/head'
 
 export interface SuccessPageProps {
   checkInDate: number
@@ -85,6 +86,11 @@ function SuccessPage({
 
   return (
     <EventProvider eventInfo={eventInfo}>
+      <Head>
+        <title>
+          {isCheckOut ? 'เช็คเอาท์ออกจากงานสำเร็จ' : 'เช็คอินเข้างานสำเร็จ'}
+        </title>
+      </Head>
       <PageLayout wavesComponent={SuccessPageWaves}>
         <div className={classes.container}>
           <Check />
