@@ -12,9 +12,11 @@ build_dev:
     - yarn install --cache-folder .yarn
     - yarn build
   cache:
+    key: ${CI_COMMIT_REF_SLUG}
     paths:
       - node_modules/
       - .yarn
+      - .next/cache/
   artifacts:
     paths:
       - .next
