@@ -25,7 +25,7 @@ services:
     volumes:
       - ./volumes/influxdb:/var/lib/influxdb2
     command: bash -c 'influxd run --bolt-path /var/lib/influxdb2/influxd.bolt --engine-path /var/lib/influxdb2/engine --store bolt'
-  reverse-proxy:
+  traefik:
     image: traefik:v2.3
     command: --api.insecure=true --providers.docker
     ports:
