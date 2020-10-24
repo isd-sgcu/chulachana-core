@@ -18,7 +18,7 @@ function ErrorPage({ statusCode, message }: ErrorPageProps) {
       <Head>
         <title>{displayMessage}</title>
       </Head>
-      <PageLayout>
+      <PageLayout style={{ padding: 16 }}>
         <h1 style={{ marginTop: 0, marginBottom: 4 }}>{displayMessage}</h1>
         <div>
           <Link href="/" passHref>

@@ -33,6 +33,11 @@ export interface EventInfoDto {
   secondaryColor: string
 }
 
+export interface EventEntry {
+  name: string
+  info: EventInfoDto
+}
+
 export function parseEventId(eventIdAndType: string) {
   const parts = eventIdAndType.split('-')
   let type = 'normal'

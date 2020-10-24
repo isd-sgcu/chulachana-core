@@ -1,8 +1,9 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import { ComponentType, PropsWithChildren } from 'react'
+import { ComponentType, CSSProperties, PropsWithChildren } from 'react'
 import Footer from './Footer'
 
 type PageLayoutProps = PropsWithChildren<{
+  style?: CSSProperties
   wavesComponent?: ComponentType
 }>
 
@@ -66,7 +67,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     contentPaper: {
       width: '100%',
-      padding: 16,
       background: 'white',
       boxShadow:
         '0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)',
@@ -75,7 +75,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export function PageLayout({ wavesComponent, children }: PageLayoutProps) {
+export function PageLayout({
+  style,
+  wavesComponent,
+  children,
+}: PageLayoutProps) {
   const classes = useStyles()
   const Waves = wavesComponent
   return (
@@ -84,7 +88,9 @@ export function PageLayout({ wavesComponent, children }: PageLayoutProps) {
         {Waves ? (
           <div className={classes.paper}>
             <div className={classes.inner}>
-              <div className={classes.content}>{children}</div>
+              <div className={classes.content} style={style}>
+                {children}
+              </div>
               <div className={classes.waves}>
                 <Waves />
               </div>
@@ -92,7 +98,9 @@ export function PageLayout({ wavesComponent, children }: PageLayoutProps) {
             <div className={classes.bottomCorner} />
           </div>
         ) : (
-          <div className={classes.contentPaper}>{children}</div>
+          <div className={classes.contentPaper} style={style}>
+            {children}
+          </div>
         )}
         <Footer />
       </div>
