@@ -1,8 +1,25 @@
 @font-face {
   font-family: 'Noto Sans Thai';
+  src: local('Roboto'), url('/fonts/Roboto/Roboto-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Thai';
   src: local('Noto Sans Thai'),
     url('/fonts/NotoSansThai/NotoSansThai-Regular.ttf');
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
+  font-family: 'Noto Sans Thai';
+  src: local('Roboto Light'), url('/fonts/Roboto/Roboto-Light.ttf');
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -14,6 +31,15 @@
   font-weight: 300;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
+  font-family: 'Noto Sans Thai';
+  src: local('Roboto Medium'), url('/fonts/Roboto/Roboto-Medium.ttf');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -23,20 +49,5 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-}
-
-@font-face {
-  font-family: 'Kanit';
-  src: local('kanit'), url('/fonts/Kanit-Regular.ttf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Kanit';
-  src: local('Kanit SemiBold') url('/fonts/Kanit-SemiBold.ttf');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
+  unicode-range: U+0E00-0E7F;
 }
