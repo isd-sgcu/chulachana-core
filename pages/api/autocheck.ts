@@ -60,7 +60,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     let checkoutDate: Date
 
     // Check if the phone is either not registered yet or the phone's 'in_event' is false
-    if (!lastPoint || !lastPoint._value) {
+    if (!lastPoint || lastPoint._value == 0) {
       checkinDate = await check(body.eventid, body.phone, body.type, true)
       checkoutDate = null
     } else {
