@@ -9,8 +9,8 @@ interface EventTitleProps {
 
 const personTypeNames: Record<PersonType, string> = {
   normal: 'ผู้เข้าร่วมงาน',
-  staff: 'สตาฟ',
-  shop: 'ร้านค้า',
+  staff: 'ผู้ปฏิบัติงาน',
+  shop: 'ร้านค้าและสปอนเซอร์',
 }
 
 const useStyles = makeStyles({
