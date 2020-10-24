@@ -9,7 +9,7 @@ def generatePhoneNumber():
     res = res + str(random.randint(0, 9))
   return res
 
-USER_COUNT = 10
+USER_COUNT = 30
 
 types = ['normal', 'staff', 'shops']
 users = [{ 'phone': generatePhoneNumber(), 'type': types[random.randint(0,2)]} for e in range(USER_COUNT)]
@@ -18,7 +18,7 @@ in_event = dict()
 
 currentTime = int(time.time())
 
-N = 100
+N = 200
 with open('./tools/generated_inputs.txt', mode='w') as f:
   print('STARTED WRITING')
   for i in range(N):
