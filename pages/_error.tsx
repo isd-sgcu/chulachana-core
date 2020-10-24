@@ -1,5 +1,7 @@
+import { Button } from '@material-ui/core'
 import Head from 'next/head'
 import Link from 'next/link'
+import { PageLayout } from '../components/PageLayout'
 
 interface ErrorPageProps {
   statusCode?: number
@@ -12,17 +14,21 @@ function ErrorPage({ statusCode, message }: ErrorPageProps) {
       ? `ไม่พบหน้านี้`
       : `เกิดข้อผิดพลาด ${statusCode}`
   return (
-    <div>
+    <>
       <Head>
         <title>{displayMessage}</title>
       </Head>
-      <h1>{displayMessage}</h1>
-      <div>
-        <Link href="/" passHref>
-          <a>กลับหน้าหลัก</a>
-        </Link>
-      </div>
-    </div>
+      <PageLayout>
+        <h1 style={{ marginTop: 0, marginBottom: 4 }}>{displayMessage}</h1>
+        <div>
+          <Link href="/" passHref>
+            <Button variant="outlined" color="primary">
+              กลับหน้าหลัก
+            </Button>
+          </Link>
+        </div>
+      </PageLayout>
+    </>
   )
 }
 

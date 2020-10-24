@@ -9,4 +9,9 @@ export const appThemeOptions: ThemeOptions = {
   typography: {
     fontFamily: appFontFamily,
   },
+  palette: {
+    primary: {
+      main: `#DE5C8E`,
+    },
+  },
 }

@@ -3,7 +3,7 @@ import { ComponentType, PropsWithChildren } from 'react'
 import Footer from './Footer'
 
 type PageLayoutProps = PropsWithChildren<{
-  wavesComponent: ComponentType
+  wavesComponent?: ComponentType
 }>
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,6 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
       borderBottomLeftRadius: 4,
       borderBottomRightRadius: 4,
     },
+    contentPaper: {
+      width: '100%',
+      padding: 16,
+      background: 'white',
+      boxShadow:
+        '0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)',
+      borderRadius: 4,
+    },
   })
 )
 
@@ -73,15 +81,19 @@ export function PageLayout({ wavesComponent, children }: PageLayoutProps) {
   return (
     <div className={classes.center}>
       <div className={classes.container}>
-        <div className={classes.paper}>
-          <div className={classes.inner}>
-            <div className={classes.content}>{children}</div>
-            <div className={classes.waves}>
-              <Waves />
+        {Waves ? (
+          <div className={classes.paper}>
+            <div className={classes.inner}>
+              <div className={classes.content}>{children}</div>
+              <div className={classes.waves}>
+                <Waves />
+              </div>
             </div>
+            <div className={classes.bottomCorner} />
           </div>
-          <div className={classes.bottomCorner} />
-        </div>
+        ) : (
+          <div className={classes.contentPaper}>{children}</div>
+        )}
         <Footer />
       </div>
     </div>
