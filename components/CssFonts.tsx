@@ -14,20 +14,22 @@ function makeFontFace(variant: string, weight: string | number): FontFace[] {
   return [
     {
       fontFamily: `'Noto Sans Thai'`,
-      src: `local('${localFontName(
-        'Roboto',
-        robotoVariant
-      )}'), url('/fonts/Roboto/Roboto-${robotoVariant}.ttf')`,
+      src: `
+        local('${localFontName('Roboto', robotoVariant)}'),
+        url('/fonts/Roboto/Roboto-${robotoVariant}.woff2') format('woff2'),
+        url('/fonts/Roboto/Roboto-${robotoVariant}.woff') format('woff'),
+        url('/fonts/Roboto/Roboto-${robotoVariant}.ttf') format('truetype')`,
       fontWeight: weight,
       fontStyle: 'normal',
       fontDisplay: 'swap',
     },
     {
       fontFamily: `'Noto Sans Thai'`,
-      src: `local('${localFontName(
-        'Noto Sans Thai',
-        variant
-      )}'), url('/fonts/NotoSansThai/NotoSansThai-${variant}.ttf')`,
+      src: `
+        local('${localFontName('Noto Sans Thai', variant)}'),
+        url('/fonts/NotoSansThai/NotoSansThai-${variant}.woff2') format('woff2'),
+        url('/fonts/NotoSansThai/NotoSansThai-${variant}.woff') format('woff'),
+        url('/fonts/NotoSansThai/NotoSansThai-${variant}.ttf') format('truetype')`,
       fontWeight: weight,
       fontStyle: 'normal',
       fontDisplay: 'swap',
