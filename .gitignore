@@ -38,3 +38,6 @@ yarn-error.log*
 
 # docker
 /volumes
+
+# util scripts
+/tools/generated_inputs.txt
