@@ -16,6 +16,7 @@ import { getInfo } from '../../api/getinfo'
 import Head from 'next/head'
 
 export interface SuccessPageProps {
+  phone: string
   checkInDate: number
   checkOutDate: number
   eventIdAndType: string
@@ -50,6 +51,7 @@ const useStyles = makeStyles({
 })
 
 function SuccessPage({
+  phone,
   checkInDate,
   checkOutDate,
   eventIdAndType,
@@ -93,7 +95,7 @@ function SuccessPage({
       </Head>
       <PageLayout wavesComponent={SuccessPageWaves}>
         <div className={classes.container}>
-          <Check />
+          <Check isCheckOut={isCheckOut} />
           <h3 className={classes.successMessage}>
             {isCheckOut ? 'เช็คเอาท์ออกจากงานสำเร็จ' : 'เช็คอินเข้างานสำเร็จ'}!
           </h3>
@@ -103,6 +105,8 @@ function SuccessPage({
             type={type}
           />
           <p className={classes.timestamp}>
+            หมายเลขโทรศัพท์: {phone}
+            <br />
             {isCheckOut && 'เช็คอินเมื่อ: '}
             {checkInTime}
             {isCheckOut && checkInDuration && (
@@ -145,9 +149,10 @@ export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
     const { eventId } = parseEventId(eventIdAndType)
     const eventInfo = await getInfo(eventId)
     const cookies = new Cookies(req, res)
+    const phone = cookies.get('phone')
     const checkInDate = parseInt(cookies.get('checkInDate'))
     const checkOutDate = parseInt(cookies.get('checkOutDate'))
-    if (!checkInDate) {
+    if (!phone || !checkInDate) {
       return {
         unstable_redirect: {
           permanent: false,
@@ -155,6 +160,8 @@ export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
         },
       }
     }
-    return { props: { checkInDate, checkOutDate, eventIdAndType, eventInfo } }
+    return {
+      props: { phone, checkInDate, checkOutDate, eventIdAndType, eventInfo },
+    }
   }
 )
