@@ -24,14 +24,14 @@ export async function check(
     type: type,
     action: isCheckin ? 'checkin' : 'checkout',
     _field: 'in_event',
-    _value: isCheckin,
+    _value: isCheckin ? 1 : 0,
   }
 
   const point = new Point(pointDto._measurement)
     .tag('action', pointDto.action)
     .tag('phone', pointDto.phone)
     .tag('type', pointDto.type)
-    .booleanField(pointDto._field, pointDto._value)
+    .intField(pointDto._field, pointDto._value)
     .timestamp(pointDto._time)
 
   // Database Writing

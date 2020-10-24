@@ -17,7 +17,7 @@ export interface PointUserDto {
   type: PersonType
   action: 'checkin' | 'checkout'
   _field: 'in_event'
-  _value: boolean // Same as action, but functions as a field-value
+  _value: 0 | 1 // Same as action, but functions as a field-value
 }
 
 export interface PointInfoDto {
