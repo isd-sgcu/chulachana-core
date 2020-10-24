@@ -19,6 +19,7 @@ import Head from 'next/head'
 const phoneRegex = /^[0-9]{9,10}$/
 
 interface CheckInPageProps {
+  initialPhone: string
   eventIdAndType: string
   eventInfo: EventInfoDto
 }
@@ -44,14 +45,19 @@ const useStyles = makeStyles({
 })
 
 // TODO: use this page for checkin/checkout only, and move the form to another page
-function CheckInPage({ eventIdAndType, eventInfo }: CheckInPageProps) {
+function CheckInPage({
+  initialPhone,
+  eventIdAndType,
+  eventInfo,
+}: CheckInPageProps) {
   const classes = useStyles()
   const { control, errors, handleSubmit } = useForm({
     reValidateMode: 'onChange',
   })
   const type = useEventType(eventIdAndType)
 
-  const phoneError = !!errors.phone
+  const initialPhoneError = initialPhone && !initialPhone.match(phoneRegex)
+  const phoneError = !!errors.phone || initialPhoneError
 
   const onSubmit = useCallback(async (data) => {
     Router.push(
@@ -74,7 +80,7 @@ function CheckInPage({ eventIdAndType, eventInfo }: CheckInPageProps) {
               name="phone"
               control={control}
               rules={{ required: true, pattern: phoneRegex }}
-              defaultValue=""
+              defaultValue={initialPhone || ''}
               render={(controllerProps) => (
                 <NumberTextField
                   {...controllerProps}
@@ -122,6 +128,7 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
     const inputPhone = query.phone as string | undefined
     const cookies = new Cookies(req, res)
     const phone = inputPhone || cookies.get('phone')
+    let initialPhone: string = null
 
     if (phone && phone.match(phoneRegex)) {
       const action = query.action as string | undefined
@@ -151,9 +158,12 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
           destination: `/${eventIdAndType}/success`,
         },
       }
+    } else if (phone) {
+      initialPhone = phone
     }
     return {
       props: {
+        initialPhone,
         eventIdAndType,
         eventInfo,
       },

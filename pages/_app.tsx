@@ -1,8 +1,8 @@
 import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core'
 import { appThemeOptions } from '../utils/theme'
 import { useEffect } from 'react'
-import '../styles/globals.css'
-import '../styles/fonts.css'
+import { CssGlobals } from '../components/CssGlobals'
+import { CssFonts } from '../components/CssFonts'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 
 const theme = createMuiTheme(appThemeOptions)
@@ -18,6 +18,8 @@ function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <CssGlobals />
+      <CssFonts />
       <Component {...pageProps} />
       <LoadingIndicator />
     </ThemeProvider>
