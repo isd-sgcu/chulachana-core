@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       width: '100%',
       maxWidth: 376,
-      padding: 'clamp(28px, 10vh, 116px)',
-      paddingLeft: 28,
-      paddingRight: 28,
-      fallbacks: {
-        padding: 28,
+      padding: 28,
+    },
+    '@media (min-height: 727px)': {
+      container: {
+        paddingTop: 66,
       },
     },
     paper: {
