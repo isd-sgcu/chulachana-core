@@ -32,11 +32,13 @@ const useStyles = makeStyles({
     margin: 0,
   },
   textField: {
-    marginTop: 50,
     fontFamily: 'Noto Sans Thai',
   },
+  inputContainer: {
+    height: 88,
+    marginTop: 50,
+  },
   buttonContainer: {
-    paddingTop: 48,
     textAlign: 'center',
   },
 })
@@ -67,31 +69,33 @@ function CheckInPage({ eventIdAndType, eventInfo }: CheckInPageProps) {
         <h3 className={classes.checkInHint}>เช็คอินเข้างาน:</h3>
         <EventTitle eventInfo={eventInfo} type={type} />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="phone"
-            control={control}
-            rules={{ required: true, pattern: phoneRegex }}
-            defaultValue=""
-            render={(controllerProps) => (
-              <NumberTextField
-                {...controllerProps}
-                value={controllerProps.value || ''}
-                name="phone"
-                className={classes.textField}
-                label="หมายเลขโทรศัพท์"
-                autoComplete="tel"
-                type="tel"
-                variant="outlined"
-                size="small"
-                error={phoneError}
-                helperText={
-                  phoneError ? 'หมายเลขโทรศัพท์ไม่ถูกต้อง' : undefined
-                }
-                autoFocus
-                fullWidth
-              />
-            )}
-          />
+          <div className={classes.inputContainer}>
+            <Controller
+              name="phone"
+              control={control}
+              rules={{ required: true, pattern: phoneRegex }}
+              defaultValue=""
+              render={(controllerProps) => (
+                <NumberTextField
+                  {...controllerProps}
+                  value={controllerProps.value || ''}
+                  name="phone"
+                  className={classes.textField}
+                  label="หมายเลขโทรศัพท์"
+                  autoComplete="tel"
+                  type="tel"
+                  variant="outlined"
+                  size="small"
+                  error={phoneError}
+                  helperText={
+                    phoneError ? 'หมายเลขโทรศัพท์ไม่ถูกต้อง' : undefined
+                  }
+                  autoFocus
+                  fullWidth
+                />
+              )}
+            />
+          </div>
           <div className={classes.buttonContainer}>
             <Button
               type="submit"
