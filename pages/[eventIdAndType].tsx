@@ -56,8 +56,7 @@ function CheckInPage({
   })
   const type = useEventType(eventIdAndType)
 
-  const initialPhoneError = initialPhone && !initialPhone.match(phoneRegex)
-  const phoneError = !!errors.phone || initialPhoneError
+  const phoneError = !!errors.phone || !!initialPhone
 
   const onSubmit = useCallback(async (data) => {
     Router.push(
