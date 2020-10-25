@@ -11,10 +11,10 @@ import { Controller, useForm } from 'react-hook-form'
 import { useCallback } from 'react'
 import { NumberTextField } from '../components/NumberTextField'
 import Router from 'next/router'
-import Cookies from 'cookies'
 import { check } from '../api/check'
 import { queryLast, queryLastWithoutInEvent } from '../api/queryLast'
 import Head from 'next/head'
+import { Config } from '../utils/config'
 
 const phoneRegex = /^[0-9]{9,10}$/
 
@@ -125,8 +125,8 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
     const { eventId, type } = parseEventId(eventIdAndType)
     const eventInfo = await getInfo(eventId)
     const inputPhone = query.phone as string | undefined
-    const cookies = new Cookies(req, res)
-    const phone = inputPhone || cookies.get('phone')
+    const config = new Config(req, res)
+    const phone = inputPhone || config.get('core', 'phone')
     let initialPhone: string = null
 
     if (phone && phone.match(phoneRegex)) {
@@ -144,13 +144,14 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
       // check out if last action is check in
       const checkIn = lastResult?._value !== 1
       const currentDate = await check(eventId, phone, type, checkIn ? 1 : 0)
-      const time = `${currentDate.getTime()}`
-      cookies.set('phone', phone)
-      cookies.set(
+      const time = currentDate.getTime()
+      config.set('core', 'phone', phone)
+      config.set(
+        eventId,
         'checkInDate',
-        checkIn ? time : `${lastResult._time.getTime()}`
+        checkIn ? time : lastResult._time.getTime()
       )
-      cookies.set('checkOutDate', checkIn ? undefined : time)
+      config.set(eventId, 'checkOutDate', checkIn ? null : time)
       return {
         unstable_redirect: {
           permanent: false,
@@ -160,6 +161,7 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
     } else if (phone) {
       initialPhone = phone
     }
+    config.getNamespace(eventId)
     return {
       props: {
         initialPhone,

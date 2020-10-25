@@ -14,6 +14,7 @@ import { EventInfoDto, parseEventId } from '../../utils/types'
 import Cookies from 'cookies'
 import { getInfo } from '../../api/getinfo'
 import Head from 'next/head'
+import { Config } from '../../utils/config'
 
 export interface SuccessPageProps {
   phone: string
@@ -148,10 +149,10 @@ export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
     const eventIdAndType = query.eventIdAndType as string
     const { eventId } = parseEventId(eventIdAndType)
     const eventInfo = await getInfo(eventId)
-    const cookies = new Cookies(req, res)
-    const phone = cookies.get('phone')
-    const checkInDate = parseInt(cookies.get('checkInDate'))
-    const checkOutDate = parseInt(cookies.get('checkOutDate'))
+    const config = new Config(req, res)
+    const phone = config.get('core', 'phone')
+    const checkInDate = config.get(eventId, 'checkInDate')
+    const checkOutDate = config.get(eventId, 'checkOutDate')
     if (!phone || !checkInDate) {
       return {
         unstable_redirect: {

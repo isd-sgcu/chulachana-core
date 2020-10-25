@@ -1,5 +1,5 @@
 import { PointUserDto } from '../utils/types'
-import { organization, bucketPrefix, client } from '../utils/db_env'
+import { organization, bucketPrefix, client } from '../utils/env'
 import { parseISO } from 'date-fns'
 
 export async function queryLast(

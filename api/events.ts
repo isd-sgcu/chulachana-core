@@ -1,4 +1,4 @@
-import { organization, bucketPrefix, client } from '../utils/db_env'
+import { organization, bucketPrefix, client } from '../utils/env'
 import { EventEntry } from '../utils/types'
 import { getInfo } from './getinfo'
 import pMemoize from 'p-memoize'

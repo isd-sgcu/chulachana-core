@@ -1,5 +1,5 @@
 import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
-import { organization, bucketPrefix, client } from '../utils/db_env'
+import { organization, bucketPrefix, client } from '../utils/env'
 import { HttpError } from '@influxdata/influxdb-client'
 import pMemoize from 'p-memoize'
 
