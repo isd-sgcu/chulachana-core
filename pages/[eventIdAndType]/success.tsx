@@ -112,7 +112,7 @@ function SuccessPage({
             {isCheckOut && checkInDuration && (
               <>
                 <br />
-                ระยะเวลาเช็คอิน: {checkInDuration}
+                ระยะเวลาที่อยู่ในงาน: {checkInDuration}
               </>
             )}
           </p>
