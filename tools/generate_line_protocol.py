@@ -18,7 +18,7 @@ in_event = dict()
 
 currentTime = int(time.time())
 
-N = 200
+N = 400
 with open('./tools/generated_inputs.txt', mode='w') as f:
   print('STARTED WRITING')
   for i in range(N):
@@ -26,11 +26,9 @@ with open('./tools/generated_inputs.txt', mode='w') as f:
     phone = user['phone']
     type = user['type']
     if phone in in_event and in_event[phone] == 1:
-      action = 'checkout'
       in_event[phone] = 0
     else:
-      action = 'checkin'
       in_event[phone] = 1
     # precision in seconds
-    f.write('user,action='+action+',type='+type+',phone='+phone+' in_event='+str(in_event[phone])+'i '+str((currentTime-N+i)*1000000000)+'\n')
+    f.write('user,type='+type+',phone='+phone+' in_event='+str(in_event[phone])+'i '+str((currentTime-N+i)*1000000000)+'\n')
   print('FINISHED WRITING')
