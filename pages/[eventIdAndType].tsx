@@ -142,8 +142,8 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
         ? await queryLast(eventId, phone, type, searchAction)
         : await queryLastWithoutInEvent(eventId, phone, type)
       // check out if last action is check in
-      const checkIn = lastResult?.action !== 'checkin'
-      const currentDate = await check(eventId, phone, type, checkIn)
+      const checkIn = lastResult?._value !== 1
+      const currentDate = await check(eventId, phone, type, checkIn ? 1 : 0)
       const time = `${currentDate.getTime()}`
       cookies.set('phone', phone)
       cookies.set(
