@@ -11,7 +11,7 @@ def generatePhoneNumber():
 
 USER_COUNT = 30
 
-types = ['normal', 'staff', 'shops']
+types = ['normal', 'staff', 'shop']
 users = [{ 'phone': generatePhoneNumber(), 'type': types[random.randint(0,2)]} for e in range(USER_COUNT)]
 
 in_event = dict()
