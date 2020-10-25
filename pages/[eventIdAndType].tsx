@@ -11,7 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useCallback } from 'react'
 import Router from 'next/router'
 import { check } from '../api/check'
-import { queryLast, queryLastWithoutInEvent } from '../api/queryLast'
+import { queryLast } from '../api/queryLast'
 import Head from 'next/head'
 import { Config } from '../utils/config'
 import { phoneRegex } from '../utils/frontend-utils'
@@ -112,13 +112,11 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
       let searchAction = undefined
       if (action === 'checkout') {
         // only search for check in action if user wants to check out
-        searchAction = 'checkin'
+        searchAction = 1
       } else if (action === 'checkin') {
-        searchAction = 'checkout'
+        searchAction = 0
       }
-      const lastResult = searchAction
-        ? await queryLast(eventId, phone, type, searchAction)
-        : await queryLastWithoutInEvent(eventId, phone, type)
+      const lastResult = await queryLast(eventId, phone, type, searchAction)
       // check out if last action is check in
       const checkIn = lastResult?._value !== 1
       const currentDate = await check(eventId, phone, type, checkIn ? 1 : 0)
