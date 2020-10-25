@@ -32,5 +32,5 @@ with open('./tools/generated_inputs.txt', mode='w') as f:
       action = 'checkin'
       in_event[phone] = 1
     # precision in seconds
-    f.write('users,action='+action+',type='+type+',phone='+phone+' in_event='+str(in_event[phone])+' '+str((currentTime-N+i)*1000000000)+'\n')
+    f.write('user,action='+action+',type='+type+',phone='+phone+' in_event='+str(in_event[phone])+' '+str((currentTime-N+i)*1000000000)+'\n')
   print('FINISHED WRITING')
