@@ -22,7 +22,7 @@ async function getInfoInternal(eventid: string): Promise<EventInfoDto> {
     if (e instanceof HttpError && e.statusCode === 404) {
       throw new ApiError(404, 'EventID Not Found')
     }
-    console.log(e)
+    console.log(`failed to get event ${eventid}: `, e)
     throw new ApiError(500, 'Internal Error')
   }
   return {

@@ -18,6 +18,7 @@ async function getAllEventsInternal(): Promise<EventEntry[]> {
     )
     return infos
   } catch (err) {
+    console.log('failed to get events:', err)
     return null
   }
 }
