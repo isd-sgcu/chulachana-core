@@ -9,18 +9,13 @@ async function getAllEventsInternal(): Promise<EventEntry[]> {
   buckets()
     |> filter(fn: (r) => r.name =~ /^${bucketPrefix}/)
   `
-  try {
-    const rows: any[] = await queryApi.collectRows(query)
-    const infos = await Promise.all(
-      rows
-        .map((row) => row.name.substring(bucketPrefix.length))
-        .map(async (name) => ({ name, info: await getInfo(name) }))
-    )
-    return infos
-  } catch (err) {
-    console.log('failed to get events:', err)
-    return null
-  }
+  const rows: any[] = await queryApi.collectRows(query)
+  const infos = await Promise.all(
+    rows
+      .map((row) => row.name.substring(bucketPrefix.length))
+      .map(async (name) => ({ name, info: await getInfo(name) }))
+  )
+  return infos
 }
 
 export const getAllEvents = pMemoize(getAllEventsInternal, { maxAge: 3600000 })
