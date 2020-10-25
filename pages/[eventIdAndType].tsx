@@ -7,16 +7,15 @@ import { PageLayout } from '../components/PageLayout'
 import { EventTitle } from '../components/EventTitle'
 import { CheckInFormWaves } from '../components/CheckInFormWaves'
 import { makeStyles, Button } from '@material-ui/core'
-import { Controller, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useCallback } from 'react'
-import { NumberTextField } from '../components/NumberTextField'
 import Router from 'next/router'
 import { check } from '../api/check'
 import { queryLast, queryLastWithoutInEvent } from '../api/queryLast'
 import Head from 'next/head'
 import { Config } from '../utils/config'
-
-const phoneRegex = /^[0-9]{9,10}$/
+import { phoneRegex } from '../utils/frontend-utils'
+import { PhoneField } from '../components/PhoneField'
 
 interface CheckInPageProps {
   initialPhone: string
@@ -51,12 +50,10 @@ function CheckInPage({
   eventInfo,
 }: CheckInPageProps) {
   const classes = useStyles()
-  const { control, errors, handleSubmit } = useForm({
+  const methods = useForm({
     reValidateMode: 'onChange',
   })
   const type = useEventType(eventIdAndType)
-
-  const phoneError = !!errors.phone || !!initialPhone
 
   const onSubmit = useCallback(async (data) => {
     Router.push(
@@ -73,45 +70,26 @@ function CheckInPage({
       <PageLayout wavesComponent={CheckInFormWaves}>
         <h3 className={classes.checkInHint}>เช็คอินเข้างาน:</h3>
         <EventTitle eventInfo={eventInfo} type={type} />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={classes.inputContainer}>
-            <Controller
-              name="phone"
-              control={control}
-              rules={{ required: true, pattern: phoneRegex }}
-              defaultValue={initialPhone || ''}
-              render={(controllerProps) => (
-                <NumberTextField
-                  {...controllerProps}
-                  value={controllerProps.value || ''}
-                  name="phone"
-                  className={classes.textField}
-                  label="หมายเลขโทรศัพท์"
-                  autoComplete="tel"
-                  type="tel"
-                  variant="outlined"
-                  size="small"
-                  error={phoneError}
-                  helperText={
-                    phoneError ? 'หมายเลขโทรศัพท์ไม่ถูกต้อง' : undefined
-                  }
-                  autoFocus
-                  fullWidth
-                />
-              )}
-            />
-          </div>
-          <div className={classes.buttonContainer}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disableElevation
-            >
-              เช็คอิน!
-            </Button>
-          </div>
-        </form>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <div className={classes.inputContainer}>
+              <PhoneField
+                defaultValue={initialPhone || ''}
+                phoneError={!!initialPhone}
+              />
+            </div>
+            <div className={classes.buttonContainer}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disableElevation
+              >
+                เช็คอิน!
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
       </PageLayout>
     </EventProvider>
   )

@@ -6,6 +6,8 @@ import { ApiError, CheckDto } from '../../utils/types'
 import { check } from '../../api/check'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
+import { Config } from '../../utils/config'
+import { getInfo } from '../../api/getinfo'
 
 /*
  * Check In API
@@ -44,6 +46,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
     ) {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
+    }
+
+    const eventId = body.eventid
+    await getInfo(eventId)
+    const config = new Config(req, res)
+    if (!config.get(eventId, 'isStaff')) {
+      throw new ApiError(403, 'not staff')
     }
 
     const checkinDate = await check(body.eventid, body.phone, body.type, 1)

@@ -4,6 +4,7 @@ import { getInfo } from '../api/getinfo'
 import { PageLayout } from '../components/PageLayout'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
 import { ApiError } from '../utils/types'
+import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'
 
 interface ConfigPageProps {
   coreConfig: Partial<CoreConfig>
@@ -36,10 +37,7 @@ function EventConfigSection({
   )
 }
 
-export default function ConfigPage({
-  coreConfig,
-  eventConfigs,
-}: ConfigPageProps) {
+function ConfigPage({ coreConfig, eventConfigs }: ConfigPageProps) {
   return (
     <>
       <Head>
@@ -60,29 +58,33 @@ export default function ConfigPage({
   )
 }
 
-export async function getServerSideProps({ query, req, res }) {
-  const config = new Config(req, res)
-  const eventId = query.eventId as string
-  if (eventId) {
-    await getInfo(eventId)
-    if (query.staffKey !== `staff ${eventId}`) {
-      throw new ApiError(403, 'Wrong staff key')
+export default withErrorPage(ConfigPage)
+
+export const getServerSideProps = getErrorPageProps<ConfigPageProps>(
+  async ({ query, req, res }) => {
+    const config = new Config(req, res)
+    const eventId = query.eventId as string
+    if (eventId) {
+      await getInfo(eventId)
+      if (query.staffKey !== `staff ${eventId}`) {
+        throw new ApiError(403, 'Wrong staff key')
+      }
+      const isStaff = config.get(eventId, 'isStaff') === true
+      config.set(eventId, 'isStaff', !isStaff)
+      return {
+        unstable_redirect: {
+          permanent: false,
+          destination: `/config`,
+        },
+      }
     }
-    const isStaff = config.get(eventId, 'isStaff') === true
-    config.set(eventId, 'isStaff', !isStaff)
-    return {
-      unstable_redirect: {
-        permanent: false,
-        destination: `/config`,
-      },
-    }
+    const coreConfig = { ...config.getNamespace('core') }
+    const events = coreConfig.events || []
+    const eventConfigs = {}
+    events.forEach((event) => {
+      eventConfigs[event] = config.getNamespace(event)
+    })
+    delete coreConfig['events']
+    return { props: { coreConfig, eventConfigs } }
   }
-  const coreConfig = { ...config.getNamespace('core') }
-  const events = coreConfig.events || []
-  const eventConfigs = {}
-  events.forEach((event) => {
-    eventConfigs[event] = config.getNamespace(event)
-  })
-  delete coreConfig['events']
-  return { props: { coreConfig, eventConfigs } }
-}
+)

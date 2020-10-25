@@ -11,9 +11,14 @@ const EventContext = createContext({} as EventConstruct)
 
 type EventProviderProps = React.PropsWithChildren<{
   eventInfo: EventInfoDto
+  isStaff?: boolean
 }>
 
-export function EventProvider({ eventInfo, children }: EventProviderProps) {
+export function EventProvider({
+  eventInfo,
+  isStaff,
+  children,
+}: EventProviderProps) {
   const { primaryColor, secondaryColor } = eventInfo
   const themeOptions: ThemeOptions = useMemo(
     () =>
@@ -21,7 +26,7 @@ export function EventProvider({ eventInfo, children }: EventProviderProps) {
         ...appThemeOptions,
         palette: {
           primary: {
-            main: `#${eventInfo.primaryColor}`,
+            main: isStaff ? `#DE5C8E` : `#${eventInfo.primaryColor}`,
           },
           secondary: {
             main: `#${eventInfo.secondaryColor}`,

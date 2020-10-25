@@ -7,6 +7,8 @@ import { check } from '../../api/check'
 import { queryLast } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
+import { getInfo } from '../../api/getinfo'
+import { Config } from '../../utils/config'
 
 /*
  * Check In API
@@ -46,6 +48,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
     ) {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
+    }
+
+    const eventId = body.eventid
+    await getInfo(eventId)
+    const config = new Config(req, res)
+    if (!config.get(eventId, 'isStaff')) {
+      throw new ApiError(403, 'not staff')
     }
 
     const lastCheckinPoint = (await queryLast(

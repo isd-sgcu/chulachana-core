@@ -11,3 +11,11 @@ export function useEventType(eventIdAndType: string) {
     return type as PersonType
   }, [eventIdAndType])
 }
+
+export const phoneRegex = /^[0-9]{9,10}$/
+
+export const personTypeNames: Record<PersonType, string> = {
+  normal: 'ผู้เข้าร่วมงาน',
+  staff: 'ผู้ปฏิบัติงาน',
+  shop: 'ร้านค้าและสปอนเซอร์',
+}

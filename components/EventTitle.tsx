@@ -1,16 +1,11 @@
 import { makeStyles } from '@material-ui/core'
+import { personTypeNames } from '../utils/frontend-utils'
 import { EventInfoDto, PersonType } from '../utils/types'
 
 interface EventTitleProps {
   className?: string
   eventInfo: EventInfoDto
   type: PersonType
-}
-
-const personTypeNames: Record<PersonType, string> = {
-  normal: 'ผู้เข้าร่วมงาน',
-  staff: 'ผู้ปฏิบัติงาน',
-  shop: 'ร้านค้าและสปอนเซอร์',
 }
 
 const useStyles = makeStyles({
