@@ -1,8 +1,9 @@
 import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
 import { organization, bucketPrefix, client } from '../utils/db_env'
 import { HttpError } from '@influxdata/influxdb-client'
+import pMemoize from 'p-memoize'
 
-export async function getInfo(eventid: string): Promise<EventInfoDto> {
+async function getInfoInternal(eventid: string): Promise<EventInfoDto> {
   const queryApi = client.getQueryApi(organization)
   const query = `
   from(bucket: "${bucketPrefix + eventid}")
@@ -30,3 +31,5 @@ export async function getInfo(eventid: string): Promise<EventInfoDto> {
     secondaryColor: map.get('secondary-color'),
   }
 }
+
+export const getInfo = pMemoize(getInfoInternal, { maxAge: 3600000 })
