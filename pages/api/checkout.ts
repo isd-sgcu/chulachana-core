@@ -52,10 +52,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       body.eventid,
       body.phone,
       body.type,
-      'checkin'
+      1
     )) as PointUserDto
     const checkinDate = lastCheckinPoint ? lastCheckinPoint._time : null
-    const checkoutDate = await check(body.eventid, body.phone, body.type, false)
+    const checkoutDate = await check(body.eventid, body.phone, body.type, 0)
     res.json({
       checkin: checkinDate,
       checkout: checkoutDate,

@@ -6,7 +6,7 @@ export async function check(
   eventid: string,
   phone: string,
   type: string,
-  isCheckin: boolean
+  isCheckin: 0 | 1
 ): Promise<Date> {
   // Initialize
   const writeApi = client.getWriteApi(
@@ -22,13 +22,11 @@ export async function check(
     eventid: eventid,
     phone: phone,
     type: type,
-    action: isCheckin ? 'checkin' : 'checkout',
     _field: 'in_event',
-    _value: isCheckin ? 1 : 0,
+    _value: isCheckin,
   }
 
   const point = new Point(pointDto._measurement)
-    .tag('action', pointDto.action)
     .tag('phone', pointDto.phone)
     .tag('type', pointDto.type)
     .intField(pointDto._field, pointDto._value)

@@ -4,7 +4,7 @@
 
 import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
 import { check } from '../../api/check'
-import { queryLastWithoutCheckAction } from '../../api/queryLast'
+import { queryLastWithoutInEvent } from '../../api/queryLast'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 
@@ -50,7 +50,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Querying last action
-    const lastPoint = (await queryLastWithoutCheckAction(
+    const lastPoint = (await queryLastWithoutInEvent(
       body.eventid,
       body.phone,
       body.type
@@ -61,11 +61,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Check if the phone is either not registered yet or the phone's 'in_event' is false
     if (!lastPoint || lastPoint._value == 0) {
-      checkinDate = await check(body.eventid, body.phone, body.type, true)
+      checkinDate = await check(body.eventid, body.phone, body.type, 1)
       checkoutDate = null
     } else {
       checkinDate = lastPoint._time
-      checkoutDate = await check(body.eventid, body.phone, body.type, false)
+      checkoutDate = await check(body.eventid, body.phone, body.type, 0)
     }
 
     res.json({

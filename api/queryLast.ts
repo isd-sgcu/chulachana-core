@@ -6,13 +6,13 @@ export async function queryLast(
   eventid: string,
   phone: string,
   type: string,
-  action: string
+  inEvent: 0 | 1
 ): Promise<PointUserDto> {
   const queryApi = client.getQueryApi(organization)
   const query = `
   from(bucket: "${bucketPrefix + eventid}")
     |> range(start: 0, stop: now())
-    |> filter(fn: (r) => r["_measurement"] == "user" and r["phone"] == "${phone}" and r["type"] == "${type}" and r["action"] == "${action}")
+    |> filter(fn: (r) => r["_measurement"] == "user" and r["phone"] == "${phone}" and r["type"] == "${type}" and r["_field"] == "in_event" and r["_value"] == "${inEvent}")
     |> group()
     |> last()
     |> yield()
@@ -27,7 +27,7 @@ export async function queryLast(
   }
 }
 
-export async function queryLastWithoutCheckAction(
+export async function queryLastWithoutInEvent(
   eventid: string,
   phone: string,
   type: string

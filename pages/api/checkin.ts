@@ -46,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
 
-    const checkinDate = await check(body.eventid, body.phone, body.type, true)
+    const checkinDate = await check(body.eventid, body.phone, body.type, 1)
     res.json({ checkin: checkinDate })
   } else {
     // Other than POST Method

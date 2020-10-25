@@ -15,9 +15,8 @@ export interface PointUserDto {
   eventid: string
   phone: string
   type: PersonType
-  action: 'checkin' | 'checkout'
   _field: 'in_event'
-  _value: 0 | 1 // Same as action, but functions as a field-value
+  _value: 0 | 1 // 0 for checkin, 1 for checkout
 }
 
 export interface PointInfoDto {
