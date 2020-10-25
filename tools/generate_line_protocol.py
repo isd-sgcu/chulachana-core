@@ -11,7 +11,7 @@ def generatePhoneNumber():
 
 USER_COUNT = 30
 
-types = ['normal', 'staff', 'shops']
+types = ['normal', 'staff', 'shop']
 users = [{ 'phone': generatePhoneNumber(), 'type': types[random.randint(0,2)]} for e in range(USER_COUNT)]
 
 in_event = dict()
@@ -32,5 +32,5 @@ with open('./tools/generated_inputs.txt', mode='w') as f:
       action = 'checkin'
       in_event[phone] = 1
     # precision in seconds
-    f.write('users,action='+action+',type='+type+',phone='+phone+' in_event='+str(in_event[phone])+' '+str((currentTime-N+i)*1000000000)+'\n')
+    f.write('user,action='+action+',type='+type+',phone='+phone+' in_event='+str(in_event[phone])+'i '+str((currentTime-N+i)*1000000000)+'\n')
   print('FINISHED WRITING')

@@ -2,15 +2,19 @@ stages:
   - build
   - deploy
 
-build_dev:
+build:
   stage: build
   image: node:12.19.0
   only:
     - dev
+    - master
   script:
-    - echo "$ENV_STAGING" > .env.local
+    - '[ "$CI_COMMIT_BRANCH" == "master" ] && ENV="$ENV_PRODUCTION" || ENV="$ENV_STAGING"'
+    - '[ "$CI_COMMIT_BRANCH" == "master" ] && APP="app-production.yaml" || APP="app-staging.yaml"'
+    - echo "$ENV" > .env.local
     - yarn install --cache-folder .yarn
     - yarn build
+    - cp $APP app.yaml
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -20,15 +24,17 @@ build_dev:
   artifacts:
     paths:
       - .next
-      - package.json
       - public
       - .env.local
+      - app.yaml
+      - package.json
 
-deploy_dev:
+deploy:
   stage: deploy
   image: google/cloud-sdk
   only:
     - dev
+    - master
   script:
     - echo "$SERVICE_ACCOUNT_KEY" > key.json
     - gcloud auth activate-service-account --key-file=key.json

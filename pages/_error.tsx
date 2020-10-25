@@ -12,7 +12,7 @@ function ErrorPage({ statusCode, message }: ErrorPageProps) {
   const displayMessage =
     message || statusCode === 404
       ? `ไม่พบหน้านี้`
-      : `เกิดข้อผิดพลาด ${statusCode}`
+      : `เกิดข้อผิดพลาด ${statusCode || 500}`
   return (
     <>
       <Head>
