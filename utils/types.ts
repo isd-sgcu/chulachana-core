@@ -32,16 +32,26 @@ export interface EventInfoDto {
   secondaryColor: string
 }
 
+export interface UserCountDto {
+  _measurement: 'user'
+  _value: number
+}
+
 export interface EventEntry {
   name: string
   info: EventInfoDto
 }
 
-export function parseEventId(eventIdAndType: string) {
+export type AllPersonType = 'all' | PersonType
+
+export function parseEventId(
+  eventIdAndType: string,
+  defaultType: PersonType = 'normal'
+) {
   const parts = eventIdAndType.split('-')
-  let type = 'normal'
+  let type = defaultType
   if (parts.length > 1) {
-    type = parts[parts.length - 1]
+    type = parts[parts.length - 1] as PersonType
     parts.pop()
   }
   const eventId = parts.join('-')
@@ -50,6 +60,26 @@ export function parseEventId(eventIdAndType: string) {
   }
   return {
     eventId,
-    type: type as PersonType,
+    type,
+  }
+}
+
+export function parseEventIdAllowAll(
+  eventIdAndType: string,
+  defaultType: AllPersonType = 'all'
+) {
+  const parts = eventIdAndType.split('-')
+  let type = defaultType
+  if (parts.length > 1) {
+    type = parts[parts.length - 1] as AllPersonType
+    parts.pop()
+  }
+  const eventId = parts.join('-')
+  if (!['all', 'normal', 'staff', 'shop'].includes(type)) {
+    throw new ApiError(404, 'Unknown type')
+  }
+  return {
+    eventId,
+    type,
   }
 }
