@@ -3,9 +3,9 @@
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { useRouter } from 'next/router'
 import { countUsers } from '../../../api/count'
 import { ApiError } from '../../../utils/types'
+import { cors } from '../../../utils/helper'
 
 /*
  * Count users API
@@ -29,7 +29,10 @@ import { ApiError } from '../../../utils/types'
  * 404: Invalid Method, EventID Not Found
  * 500: Internal Server (When read from database)
  */
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req, res)
+
   const { eventIdAndType } = req.query
   if (req.method === 'GET') {
     // Input Validation
