@@ -13,3 +13,8 @@ export const createRedisClient = async () => {
   await client.connect()
   return client
 }
+
+export const influxClient = new InfluxDB({
+  url: config.influx.databaseURL,
+  token: config.influx.token,
+})

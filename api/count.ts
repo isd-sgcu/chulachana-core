@@ -10,7 +10,7 @@ import {
 
 export async function countUsersInternal(eventIdAndType: string) {
   const { eventId, type } = parseEventIdAllowAll(eventIdAndType as string)
-  const queryApi = client.getQueryApi(organization)
+  const queryApi = influxClient.getQueryApi(config.influx.organization)
   const query = `
   from(bucket: "${config.influx.bucketPrefix + eventId}")
     |> range(start: 0, stop: now())

@@ -5,7 +5,7 @@ import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
 
 async function getInfoInternal(eventid: string): Promise<EventInfoDto> {
-  const queryApi = client.getQueryApi(organization)
+  const queryApi = influxClient.getQueryApi(config.influx.organization)
   const query = `
   from(bucket: "${config.influx.bucketPrefix + eventid}")
     |> range(start: 0, stop: now())

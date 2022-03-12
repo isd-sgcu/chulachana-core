@@ -5,7 +5,7 @@ import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
 
 async function getAllEventsInternal(): Promise<EventEntry[]> {
-  const queryApi = client.getQueryApi(organization)
+  const queryApi = influxClient.getQueryApi(config.influx.organization)
   const query = `
   buckets()
     |> filter(fn: (r) => r.name =~ /^${config.influx.bucketPrefix}/)

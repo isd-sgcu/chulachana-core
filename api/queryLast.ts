@@ -9,7 +9,7 @@ export async function queryLast(
   type: string,
   inEvent?: 0 | 1
 ): Promise<PointUserDto> {
-  const queryApi = client.getQueryApi(organization)
+  const queryApi = influxClient.getQueryApi(config.influx.organization)
   const inEventQuery =
     inEvent !== undefined
       ? `and r["_field"] == "in_event" and r["_value"] == ${inEvent}`

@@ -1,5 +1,3 @@
-import { InfluxDB } from '@influxdata/influxdb-client'
-
 export const config = {
   influx: {
     databaseURL: process.env.DB_URL,
