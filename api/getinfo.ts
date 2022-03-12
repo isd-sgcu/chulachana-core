@@ -1,12 +1,13 @@
 import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
-import { organization, bucketPrefix, client } from '../utils/env'
 import { HttpError } from '@influxdata/influxdb-client'
 import pMemoize from 'p-memoize'
+import { influxClient } from '../utils/database'
+import { config } from '../utils/env'
 
 async function getInfoInternal(eventid: string): Promise<EventInfoDto> {
   const queryApi = client.getQueryApi(organization)
   const query = `
-  from(bucket: "${bucketPrefix + eventid}")
+  from(bucket: "${config.influx.bucketPrefix + eventid}")
     |> range(start: 0, stop: now())
     |> filter(fn: (r) => r["_measurement"] == "info")
     |> group()

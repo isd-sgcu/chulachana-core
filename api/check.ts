@@ -1,6 +1,7 @@
 import { ApiError, CheckDto, PointUserDto } from '../utils/types'
 import { Point, HttpError } from '@influxdata/influxdb-client'
-import { organization, bucketPrefix, client } from '../utils/env'
+import { influxClient } from '../utils/database'
+import { config } from '../utils/env'
 
 export async function check(
   eventid: string,
@@ -9,9 +10,9 @@ export async function check(
   isCheckin: 0 | 1
 ): Promise<Date> {
   // Initialize
-  const writeApi = client.getWriteApi(
-    organization,
-    bucketPrefix + eventid,
+  const writeApi = influxClient.getWriteApi(
+    config.influx.organization,
+    config.influx.bucketPrefix + eventid,
     'ns'
   )
 

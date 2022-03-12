@@ -1,14 +1,14 @@
 import { InfluxDB } from '@influxdata/influxdb-client'
 import * as redis from 'redis'
-import { redisDb, redisHost, redisPort } from './env'
+import { config } from './env'
 
 export const createRedisClient = async () => {
   const client = redis.createClient({
     socket: {
-      host: redisHost,
-      port: redisPort,
+      host: config.redis.host,
+      port: config.redis.port,
     },
-    database: redisDb,
+    database: config.redis.database,
   })
   await client.connect()
   return client

@@ -1,5 +1,6 @@
 import pMemoize from 'p-memoize'
-import { bucketPrefix, client, organization } from '../utils/env'
+import { influxClient } from '../utils/database'
+import { config } from '../utils/env'
 import {
   AllPersonType,
   ApiError,
@@ -11,7 +12,7 @@ export async function countUsersInternal(eventIdAndType: string) {
   const { eventId, type } = parseEventIdAllowAll(eventIdAndType as string)
   const queryApi = client.getQueryApi(organization)
   const query = `
-  from(bucket: "${bucketPrefix + eventId}")
+  from(bucket: "${config.influx.bucketPrefix + eventId}")
     |> range(start: 0, stop: now())
     |> filter(fn: (r) => r["_measurement"] == "user")
     ${type !== 'all' ? `|> filter(fn: (r) => r["type"] == "${type}")` : ''}
@@ -31,4 +32,4 @@ export async function countUsersInternal(eventIdAndType: string) {
   }
 }
 
-export const countUsers = pMemoize(countUsersInternal, { maxAge: 5000})
+export const countUsers = pMemoize(countUsersInternal, { maxAge: 5000 })
