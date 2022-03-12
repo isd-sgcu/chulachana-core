@@ -25,6 +25,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-hook-form": "^6.9.5",
+    "redis": "^4.0.4",
     "validator": "^13.1.17"
   },
   "devDependencies": {
