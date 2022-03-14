@@ -3,22 +3,21 @@ import Head from 'next/head'
 import Router from 'next/router'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { check } from '../api/check'
-import { queryLast } from '../api/queryLast'
-import { CheckInFormWaves } from '../components/CheckInFormWaves'
-import { EventProvider } from '../components/EventProvider'
-import { EventTitle } from '../components/EventTitle'
-import { PageLayout } from '../components/PageLayout'
-import { PhoneField } from '../components/PhoneField'
-import { EventInfo, getEventInfo } from '../models/redis/event'
-import { Config } from '../utils/config'
-import { phoneRegex, useEventType } from '../utils/frontend-utils'
-import { parseEventId } from '../utils/types'
-import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'
+import { check } from '../../../api/check'
+import { queryLast } from '../../../api/queryLast'
+import { CheckInFormWaves } from '../../../components/CheckInFormWaves'
+import { EventProvider } from '../../../components/EventProvider'
+import { EventTitle } from '../../../components/EventTitle'
+import { PageLayout } from '../../../components/PageLayout'
+import { PhoneField } from '../../../components/PhoneField'
+import { EventInfo, getEventInfo } from '../../../models/redis/event'
+import { Config } from '../../../utils/config'
+import { phoneRegex } from '../../../utils/frontend-utils'
+import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 interface CheckInPageProps {
-  initialPhone: string
-  eventIdAndType: string
+  eventId: string
+  role: string
   eventInfo: EventInfo
 }
 
@@ -43,21 +42,16 @@ const useStyles = makeStyles({
 })
 
 // TODO: use this page for checkin/checkout only, and move the form to another page
-function CheckInPage({
-  initialPhone,
-  eventIdAndType,
-  eventInfo,
-}: CheckInPageProps) {
+function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
   const classes = useStyles()
   const methods = useForm({
     reValidateMode: 'onChange',
   })
-  const type = useEventType(eventIdAndType, Object.keys(eventInfo.roles)[0])
 
   const onSubmit = useCallback(async (data) => {
     Router.push(
-      `/[eventIdAndType]?phone=${data.phone}`,
-      `/${eventIdAndType}?phone=${data.phone}`
+      `/[eventId]/[role]?phone=${data.phone}`,
+      `/${eventId}/${role}?phone=${data.phone}`
     )
   }, [])
 
@@ -68,14 +62,11 @@ function CheckInPage({
       </Head>
       <PageLayout wavesComponent={CheckInFormWaves}>
         <h3 className={classes.checkInHint}>เช็คอินเข้างาน:</h3>
-        <EventTitle eventInfo={eventInfo} type={type} />
+        <EventTitle eventInfo={eventInfo} role={role} />
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className={classes.inputContainer}>
-              <PhoneField
-                defaultValue={initialPhone || ''}
-                phoneError={!!initialPhone}
-              />
+              <PhoneField />
             </div>
             <div className={classes.buttonContainer}>
               <Button
@@ -98,13 +89,11 @@ export default withErrorPage(CheckInPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
   async ({ query, req, res }) => {
-    const eventIdAndType = query.eventIdAndType as string
-    const { eventId, type } = parseEventId(eventIdAndType)
+    const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
     const inputPhone = query.phone as string | undefined
     const config = new Config(req, res)
     const phone = inputPhone || config.get('core', 'phone')
-    let initialPhone: string = null
 
     if (phone && phone.match(phoneRegex)) {
       const action = query.action as string | undefined
@@ -115,32 +104,32 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
       } else if (action === 'checkin') {
         searchAction = 0
       }
-      const lastResult = await queryLast(eventId, phone, type, searchAction)
+      const lastResult = await queryLast(eventId, phone, role, searchAction)
       // check out if last action is check in
       const checkIn = lastResult?._value !== 1
-      const currentDate = await check(eventId, phone, type, checkIn ? 1 : 0)
+      const currentDate = await check(eventId, phone, role, checkIn ? 1 : 0)
       const time = currentDate.getTime()
+
       config.set('core', 'phone', phone)
       config.set(
         eventId,
-        'checkInDate',
+        'checkInTimestamp',
         checkIn ? time : lastResult._time.getTime()
       )
-      config.set(eventId, 'checkOutDate', checkIn ? null : time)
+      config.set(eventId, 'checkOutTimestamp', checkIn ? null : time)
+
       return {
         unstable_redirect: {
           permanent: false,
-          destination: `/${eventIdAndType}/success`,
+          destination: `/${eventId}/${role}/success`,
         },
       }
-    } else if (phone) {
-      initialPhone = phone
     }
     config.getNamespace(eventId)
     return {
       props: {
-        initialPhone,
-        eventIdAndType,
+        eventId,
+        role,
         eventInfo,
       },
     }
