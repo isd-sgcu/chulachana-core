@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { createStyles, makeStyles, Theme } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import { useEffect, useState } from 'react'
 
 const useStyles = makeStyles((theme: Theme) => {
   const themeColor = theme.palette.primary.light

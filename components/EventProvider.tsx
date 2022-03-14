@@ -1,7 +1,7 @@
+import { createMuiTheme, ThemeOptions, ThemeProvider } from '@material-ui/core'
 import { createContext, useContext, useMemo } from 'react'
-import { ThemeProvider, createMuiTheme, ThemeOptions } from '@material-ui/core'
-import { EventInfoDto } from '../utils/types'
 import { appThemeOptions } from '../utils/theme'
+import { EventInfoDto } from '../utils/types'
 
 interface EventConstruct {
   eventInfo: EventInfoDto

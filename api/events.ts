@@ -1,8 +1,8 @@
-import { EventEntry } from '../utils/types'
-import { getInfo } from './getinfo'
 import pMemoize from 'p-memoize'
 import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
+import { EventEntry } from '../utils/types'
+import { getInfo } from './getinfo'
 
 async function getAllEventsInternal(): Promise<EventEntry[]> {
   const queryApi = influxClient.getQueryApi(config.influx.organization)

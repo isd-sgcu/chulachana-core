@@ -1,6 +1,6 @@
-import { Children } from 'react'
 import { ServerStyleSheets } from '@material-ui/core'
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
+import { Children } from 'react'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {

@@ -4,8 +4,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { countUsers } from '../../../api/count'
-import { ApiError } from '../../../utils/types'
 import { cors } from '../../../utils/helper'
+import { ApiError } from '../../../utils/types'
 
 /*
  * Count users API

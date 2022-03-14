@@ -1,7 +1,7 @@
-import { ApiError, CheckDto, PointUserDto } from '../utils/types'
-import { Point, HttpError } from '@influxdata/influxdb-client'
+import { HttpError, Point } from '@influxdata/influxdb-client'
 import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
+import { ApiError, PointUserDto } from '../utils/types'
 
 export async function check(
   eventid: string,

@@ -1,8 +1,8 @@
-import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
 import { HttpError } from '@influxdata/influxdb-client'
 import pMemoize from 'p-memoize'
 import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
+import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
 
 async function getInfoInternal(eventid: string): Promise<EventInfoDto> {
   const queryApi = influxClient.getQueryApi(config.influx.organization)

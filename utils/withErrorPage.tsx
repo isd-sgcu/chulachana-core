@@ -1,6 +1,6 @@
-import ErrorPage from '../pages/_error'
-import { GetServerSideProps } from 'next'
 import { ServerResponse } from 'http'
+import { GetServerSideProps } from 'next'
+import ErrorPage from '../pages/_error'
 
 export interface ErrorPageProps<P> {
   pageProps?: P

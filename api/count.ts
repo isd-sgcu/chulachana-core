@@ -1,12 +1,7 @@
 import pMemoize from 'p-memoize'
 import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
-import {
-  AllPersonType,
-  ApiError,
-  parseEventIdAllowAll,
-  UserCountDto,
-} from '../utils/types'
+import { ApiError, parseEventIdAllowAll, UserCountDto } from '../utils/types'
 
 export async function countUsersInternal(eventIdAndType: string) {
   const { eventId, type } = parseEventIdAllowAll(eventIdAndType as string)

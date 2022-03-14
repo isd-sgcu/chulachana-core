@@ -1,7 +1,7 @@
-import { PointUserDto } from '../utils/types'
 import { parseISO } from 'date-fns'
 import { influxClient } from '../utils/database'
 import { config } from '../utils/env'
+import { PointUserDto } from '../utils/types'
 
 export async function queryLast(
   eventid: string,

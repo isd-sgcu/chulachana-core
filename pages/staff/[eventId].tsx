@@ -6,17 +6,17 @@ import {
   Radio,
   RadioGroup,
 } from '@material-ui/core'
+import Axios from 'axios'
+import Head from 'next/head'
+import { useCallback, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { getInfo } from '../../api/getinfo'
 import { EventProvider } from '../../components/EventProvider'
 import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
 import { Config } from '../../utils/config'
-import { ApiError, EventInfoDto } from '../../utils/types'
 import { personTypeNames } from '../../utils/frontend-utils'
-import { useCallback, useRef, useState } from 'react'
-import Axios from 'axios'
-import Head from 'next/head'
+import { ApiError, EventInfoDto } from '../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 const client = Axios.create({ withCredentials: true })

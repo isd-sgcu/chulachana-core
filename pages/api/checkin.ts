@@ -2,12 +2,12 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
-import { ApiError, CheckDto } from '../../utils/types'
-import { check } from '../../api/check'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
-import { Config } from '../../utils/config'
+import { check } from '../../api/check'
 import { getInfo } from '../../api/getinfo'
+import { Config } from '../../utils/config'
+import { ApiError, CheckDto } from '../../utils/types'
 
 /*
  * Check In API

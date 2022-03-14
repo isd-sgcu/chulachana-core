@@ -1,5 +1,5 @@
-import Head from 'next/head'
 import { TextField } from '@material-ui/core'
+import Head from 'next/head'
 import { getInfo } from '../api/getinfo'
 import { PageLayout } from '../components/PageLayout'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
