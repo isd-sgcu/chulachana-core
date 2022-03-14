@@ -15,6 +15,7 @@ import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
 import { EventInfo, getEventInfo } from '../../models/redis/event'
 import { Config } from '../../utils/config'
+import { ApiError } from '../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 const client = Axios.create({ withCredentials: true })
@@ -143,9 +144,9 @@ export const getServerSideProps = getErrorPageProps<StaffCheckInProps>(
     const eventId = query.eventId as string
     const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
-    // if (!config.get(eventId, 'isStaff')) {
-    //   throw new ApiError(403, 'not staff')
-    // }
+    if (!config.get(eventId, 'isStaff')) {
+      throw new ApiError(403, 'not staff')
+    }
     return { props: { eventId, eventInfo } }
   }
 )
