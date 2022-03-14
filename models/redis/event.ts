@@ -18,15 +18,11 @@ export interface EventInfo {
 }
 
 export async function getEventInfo(eventId: string): Promise<EventInfo> {
-  const exists = await redisClient.exists(
-    `config:${eventId}:info`,
-    `config:${eventId}:roles`
-  )
-  if (!exists) {
-    return null
-  }
   const info = await redisClient.hgetall(`config:${eventId}:info`)
   const roles = await redisClient.hgetall(`config:${eventId}:roles`)
+  if (Object.keys(info).length === 0 || Object.keys(roles).length === 0) {
+    return null
+  }
 
   return {
     id: eventId,
