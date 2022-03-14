@@ -1,18 +1,29 @@
 import { ServerResponse } from 'http'
 import { GetServerSideProps } from 'next'
+import { EventInfo } from '../models/redis/event'
 import ErrorPage from '../pages/_error'
 
 export interface ErrorPageProps<P> {
-  pageProps?: P
+  pageProps?: P & { eventInfo?: EventInfo }
   errorCode?: number
 }
 
+interface ErrorPageOptions {
+  ensureEventExists?: boolean
+}
+
 export function withErrorPage<P>(
-  Page: React.ComponentType<P>
-): React.ComponentType<ErrorPageProps<P>> {
+  Page: React.ComponentType<P>,
+  options?: {
+    ensureEventExists?: boolean
+  }
+): React.ComponentType<ErrorPageProps<P>> & ErrorPageOptions {
   function withErrorPage(props: ErrorPageProps<P>) {
     if (props.errorCode) {
       return <ErrorPage statusCode={props.errorCode} />
+    }
+    if (options?.ensureEventExists && !props.pageProps.eventInfo) {
+      return <ErrorPage message="ไม่พบงานที่ระบุ" />
     }
 
     return <Page {...props.pageProps} />

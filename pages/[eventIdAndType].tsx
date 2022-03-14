@@ -4,22 +4,22 @@ import Router from 'next/router'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { check } from '../api/check'
-import { getInfo } from '../api/getinfo'
 import { queryLast } from '../api/queryLast'
 import { CheckInFormWaves } from '../components/CheckInFormWaves'
 import { EventProvider } from '../components/EventProvider'
 import { EventTitle } from '../components/EventTitle'
 import { PageLayout } from '../components/PageLayout'
 import { PhoneField } from '../components/PhoneField'
+import { EventInfo, getEventInfo } from '../models/redis/event'
 import { Config } from '../utils/config'
 import { phoneRegex, useEventType } from '../utils/frontend-utils'
-import { EventInfoDto, parseEventId } from '../utils/types'
+import { parseEventId } from '../utils/types'
 import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'
 
 interface CheckInPageProps {
   initialPhone: string
   eventIdAndType: string
-  eventInfo: EventInfoDto
+  eventInfo: EventInfo
 }
 
 const useStyles = makeStyles({
@@ -52,7 +52,7 @@ function CheckInPage({
   const methods = useForm({
     reValidateMode: 'onChange',
   })
-  const type = useEventType(eventIdAndType)
+  const type = useEventType(eventIdAndType, Object.keys(eventInfo.roles)[0])
 
   const onSubmit = useCallback(async (data) => {
     Router.push(
@@ -94,13 +94,13 @@ function CheckInPage({
   )
 }
 
-export default withErrorPage(CheckInPage)
+export default withErrorPage(CheckInPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
   async ({ query, req, res }) => {
     const eventIdAndType = query.eventIdAndType as string
     const { eventId, type } = parseEventId(eventIdAndType)
-    const eventInfo = await getInfo(eventId)
+    const eventInfo = await getEventInfo(eventId)
     const inputPhone = query.phone as string | undefined
     const config = new Config(req, res)
     const phone = inputPhone || config.get('core', 'phone')

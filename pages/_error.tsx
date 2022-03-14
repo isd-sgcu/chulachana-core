@@ -9,10 +9,11 @@ interface ErrorPageProps {
 }
 
 function ErrorPage({ statusCode, message }: ErrorPageProps) {
-  const displayMessage =
-    message || statusCode === 404
-      ? `ไม่พบหน้านี้`
-      : `เกิดข้อผิดพลาด ${statusCode || 500}`
+  const displayMessage = message
+    ? message
+    : statusCode === 404
+    ? `ไม่พบหน้านี้`
+    : `เกิดข้อผิดพลาด ${statusCode || 500}`
   return (
     <>
       <Head>

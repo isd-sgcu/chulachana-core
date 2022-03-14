@@ -5,8 +5,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 import { check } from '../../api/check'
-import { getInfo } from '../../api/getinfo'
 import { queryLast } from '../../api/queryLast'
+import { ensureEventExists } from '../../models/redis/event'
 import { Config } from '../../utils/config'
 import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
 
@@ -51,7 +51,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const eventId = body.eventid
-    await getInfo(eventId)
+    ensureEventExists(eventId)
     const config = new Config(req, res)
     if (!config.get(eventId, 'isStaff')) {
       throw new ApiError(403, 'not staff')

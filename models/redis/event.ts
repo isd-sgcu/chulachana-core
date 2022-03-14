@@ -1,3 +1,4 @@
+import { ApiError } from '../../utils/types'
 import { redisClient } from '../clients'
 
 export async function getEvents() {
@@ -13,14 +14,31 @@ export interface EventInfo {
   name: string
   primaryColor: string
   secondaryColor: string
+  roles: Record<string, string>
 }
 
 export async function getEventInfo(eventId: string): Promise<EventInfo> {
-  const config = await redisClient.hgetall(`config:${eventId}`)
+  const info = await redisClient.hgetall(`config:${eventId}:info`)
+  const roles = await redisClient.hgetall(`config:${eventId}:roles`)
+  if (Object.keys(info).length === 0 || Object.keys(roles).length === 0) {
+    return null
+  }
+
   return {
     id: eventId,
-    name: config.name,
-    primaryColor: config.primaryColor,
-    secondaryColor: config.secondaryColor,
+    name: info.name,
+    primaryColor: info.primaryColor,
+    secondaryColor: info.secondaryColor,
+    roles,
+  }
+}
+
+export async function ensureEventExists(eventId: string) {
+  const exists = await redisClient.exists(
+    `config:${eventId}:info`,
+    `config:${eventId}:roles`
+  )
+  if (!exists) {
+    throw new ApiError(404, `Event ${eventId} does not exist`)
   }
 }
