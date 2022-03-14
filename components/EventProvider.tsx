@@ -1,6 +1,6 @@
 import { createMuiTheme, ThemeOptions, ThemeProvider } from '@material-ui/core'
 import { createContext, useContext, useMemo } from 'react'
-import { EventInfo } from '../models/redis/event'
+import { EventInfo } from '../models/prisma/event'
 import { appThemeOptions } from '../utils/theme'
 
 interface EventConstruct {

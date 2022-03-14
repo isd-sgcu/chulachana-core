@@ -13,7 +13,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { EventProvider } from '../../components/EventProvider'
 import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
-import { EventInfo, getEventInfo } from '../../models/redis/event'
+import { EventInfo, getEventInfo } from '../../models/prisma/event'
 import { Config } from '../../utils/config'
 import { ApiError } from '../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
@@ -88,7 +88,7 @@ function StaffCheckIn({ eventId, eventInfo }: StaffCheckInProps) {
   return (
     <EventProvider eventInfo={eventInfo} isStaff>
       <Head>
-        <title>Staff {eventInfo.name}</title>
+        <title>Staff {eventInfo}</title>
       </Head>
       <PageLayout style={{ padding: 16 }}>
         <h1 style={{ margin: 0 }}>{eventInfo.name}</h1>
@@ -101,12 +101,12 @@ function StaffCheckIn({ eventId, eventInfo }: StaffCheckInProps) {
                 defaultValue="normal"
                 render={(controllerProps) => (
                   <RadioGroup {...controllerProps}>
-                    {Object.keys(eventInfo.roles).map((role) => (
+                    {eventInfo.roles.map((role) => (
                       <FormControlLabel
-                        key={role}
-                        value={role}
+                        key={role.slug}
+                        value={role.slug}
                         control={<Radio disabled={loading} />}
-                        label={eventInfo.roles[role]}
+                        label={role.name}
                       />
                     ))}
                   </RadioGroup>

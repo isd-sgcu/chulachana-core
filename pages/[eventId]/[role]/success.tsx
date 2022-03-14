@@ -9,7 +9,7 @@ import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
 import { PageLayout } from '../../../components/PageLayout'
 import { SuccessPageWaves } from '../../../components/SuccessPageWaves'
-import { EventInfo, getEventInfo } from '../../../models/redis/event'
+import { EventInfo, getEventInfo } from '../../../models/prisma/event'
 import { Config } from '../../../utils/config'
 import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 

@@ -1,6 +1,6 @@
 import { ServerResponse } from 'http'
 import { GetServerSideProps } from 'next'
-import { EventInfo } from '../models/redis/event'
+import { EventInfo } from '../models/prisma/event'
 import ErrorPage from '../pages/_error'
 
 export interface ErrorPageProps<P> {

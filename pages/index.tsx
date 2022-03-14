@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { EventInfo, getEvents } from '../models/redis/event'
+import { EventInfo, getEvents } from '../models/prisma/event'
 
 interface HomeProps {
   events: EventInfo[]
@@ -30,8 +30,8 @@ export default function Home({ events }: HomeProps) {
           {events.map((event) => (
             <Link
               key={event.id}
-              href="/[eventIdAndType]"
-              as={`/${event.id}`}
+              href="/[eventId]/[role]"
+              as={`/${event.id}/${event.roles[0].slug}`}
               passHref
             >
               <ListItem button component="a">
