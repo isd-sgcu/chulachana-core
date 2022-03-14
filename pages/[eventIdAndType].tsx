@@ -94,7 +94,7 @@ function CheckInPage({
   )
 }
 
-export default withErrorPage(CheckInPage)
+export default withErrorPage(CheckInPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
   async ({ query, req, res }) => {

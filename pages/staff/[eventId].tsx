@@ -136,7 +136,7 @@ function StaffCheckIn({ eventId, eventInfo }: StaffCheckInProps) {
   )
 }
 
-export default withErrorPage(StaffCheckIn)
+export default withErrorPage(StaffCheckIn, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<StaffCheckInProps>(
   async ({ query, req, res }) => {

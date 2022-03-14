@@ -141,7 +141,7 @@ function SuccessPage({
   )
 }
 
-export default withErrorPage(SuccessPage)
+export default withErrorPage(SuccessPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
   async ({ query, req, res }) => {
