@@ -2,12 +2,11 @@ import { List, ListItem } from '@material-ui/core'
 import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
-import { getAllEvents } from '../api/events'
 import { PageLayout } from '../components/PageLayout'
-import { EventEntry } from '../utils/types'
+import { EventInfo, getEvents } from '../models/redis/event'
 
 interface HomeProps {
-  events: EventEntry[]
+  events: EventInfo[]
 }
 
 export default function Home({ events }: HomeProps) {
@@ -30,13 +29,13 @@ export default function Home({ events }: HomeProps) {
         <List component="nav">
           {events.map((event) => (
             <Link
-              key={event.name}
+              key={event.id}
               href="/[eventIdAndType]"
-              as={`/${event.name}`}
+              as={`/${event.id}`}
               passHref
             >
               <ListItem button component="a">
-                {event.info.name}
+                {event.name}
               </ListItem>
             </Link>
           ))}
@@ -47,5 +46,5 @@ export default function Home({ events }: HomeProps) {
 }
 
 export async function getServerSideProps() {
-  return { props: { events: await getAllEvents() } }
+  return { props: { events: await getEvents() } }
 }

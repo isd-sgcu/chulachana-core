@@ -1,6 +1,6 @@
 import { HttpError } from '@influxdata/influxdb-client'
 import pMemoize from 'p-memoize'
-import { influxClient } from '../utils/database'
+import { influxClient } from '../models/clients'
 import { config } from '../utils/env'
 import { ApiError, EventInfoDto, PointInfoDto } from '../utils/types'
 
