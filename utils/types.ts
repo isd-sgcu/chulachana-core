@@ -19,27 +19,9 @@ export interface PointUserDto {
   _value: 0 | 1 // 0 for checkin, 1 for checkout
 }
 
-export interface PointInfoDto {
-  _time: Date
-  _measurement: 'info'
-  _field: string
-  _value: string
-}
-
-export interface EventInfoDto {
-  name: string
-  primaryColor: string
-  secondaryColor: string
-}
-
 export interface UserCountDto {
   _measurement: 'user'
   _value: number
-}
-
-export interface EventEntry {
-  name: string
-  info: EventInfoDto
 }
 
 export type AllPersonType = 'all' | PersonType

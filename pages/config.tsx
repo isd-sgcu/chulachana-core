@@ -1,6 +1,5 @@
 import { TextField } from '@material-ui/core'
 import Head from 'next/head'
-import { getInfo } from '../api/getinfo'
 import { PageLayout } from '../components/PageLayout'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
 import { ApiError } from '../utils/types'
@@ -65,7 +64,6 @@ export const getServerSideProps = getErrorPageProps<ConfigPageProps>(
     const config = new Config(req, res)
     const eventId = query.eventId as string
     if (eventId) {
-      await getInfo(eventId)
       if (query.staffKey !== `staff ${eventId}`) {
         throw new ApiError(403, 'Wrong staff key')
       }

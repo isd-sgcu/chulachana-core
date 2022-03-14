@@ -4,15 +4,15 @@ import { th } from 'date-fns/locale'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useMemo } from 'react'
-import { getInfo } from '../../api/getinfo'
 import Check from '../../components/Check'
 import { EventProvider } from '../../components/EventProvider'
 import { EventTitle } from '../../components/EventTitle'
 import { PageLayout } from '../../components/PageLayout'
 import { SuccessPageWaves } from '../../components/SuccessPageWaves'
+import { EventInfo, getEventInfo } from '../../models/redis/event'
 import { Config } from '../../utils/config'
 import { useEventType } from '../../utils/frontend-utils'
-import { EventInfoDto, parseEventId } from '../../utils/types'
+import { parseEventId } from '../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 export interface SuccessPageProps {
@@ -20,7 +20,7 @@ export interface SuccessPageProps {
   checkInDate: number
   checkOutDate: number
   eventIdAndType: string
-  eventInfo: EventInfoDto
+  eventInfo: EventInfo
 }
 
 const useStyles = makeStyles({
@@ -147,7 +147,7 @@ export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
   async ({ query, req, res }) => {
     const eventIdAndType = query.eventIdAndType as string
     const { eventId } = parseEventId(eventIdAndType)
-    const eventInfo = await getInfo(eventId)
+    const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
     const phone = config.get('core', 'phone')
     const checkInDate = config.get(eventId, 'checkInDate')

@@ -1,16 +1,16 @@
 import { createMuiTheme, ThemeOptions, ThemeProvider } from '@material-ui/core'
 import { createContext, useContext, useMemo } from 'react'
+import { EventInfo } from '../models/redis/event'
 import { appThemeOptions } from '../utils/theme'
-import { EventInfoDto } from '../utils/types'
 
 interface EventConstruct {
-  eventInfo: EventInfoDto
+  eventInfo: EventInfo
 }
 
 const EventContext = createContext({} as EventConstruct)
 
 type EventProviderProps = React.PropsWithChildren<{
-  eventInfo: EventInfoDto
+  eventInfo: EventInfo
   isStaff?: boolean
 }>
 
@@ -26,10 +26,14 @@ export function EventProvider({
         ...appThemeOptions,
         palette: {
           primary: {
-            main: isStaff ? `#DE5C8E` : `#${eventInfo.primaryColor}`,
+            main: isStaff
+              ? `#${eventInfo.secondaryColor}`
+              : `#${eventInfo.primaryColor}`,
           },
           secondary: {
-            main: `#${eventInfo.secondaryColor}`,
+            main: isStaff
+              ? `#${eventInfo.primaryColor}`
+              : `#${eventInfo.secondaryColor}`,
           },
         },
       }),

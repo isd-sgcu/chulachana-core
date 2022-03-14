@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { PersonType } from './types'
 
-export function useEventType(eventIdAndType: string) {
+// TODO: deprecate this, use multiple path params instead
+export function useEventType(eventIdAndType: string, defaultRole?: string) {
   return useMemo(() => {
     const parts = eventIdAndType.split('-')
-    let type = 'normal'
+    let type = defaultRole
     if (parts.length > 1) {
       type = parts[parts.length - 1]
     }
@@ -13,9 +14,3 @@ export function useEventType(eventIdAndType: string) {
 }
 
 export const phoneRegex = /^[0-9]{9,10}$/
-
-export const personTypeNames: Record<PersonType, string> = {
-  normal: 'ผู้เข้าร่วมงาน',
-  staff: 'ผู้ปฏิบัติงาน',
-  shop: 'ร้านค้าและสปอนเซอร์',
-}

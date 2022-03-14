@@ -10,20 +10,18 @@ import Axios from 'axios'
 import Head from 'next/head'
 import { useCallback, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
-import { getInfo } from '../../api/getinfo'
 import { EventProvider } from '../../components/EventProvider'
 import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
+import { EventInfo, getEventInfo } from '../../models/redis/event'
 import { Config } from '../../utils/config'
-import { personTypeNames } from '../../utils/frontend-utils'
-import { ApiError, EventInfoDto } from '../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 const client = Axios.create({ withCredentials: true })
 
 interface StaffCheckInProps {
   eventId: string
-  eventInfo: EventInfoDto
+  eventInfo: EventInfo
 }
 
 const useStyles = makeStyles({
@@ -102,21 +100,14 @@ function StaffCheckIn({ eventId, eventInfo }: StaffCheckInProps) {
                 defaultValue="normal"
                 render={(controllerProps) => (
                   <RadioGroup {...controllerProps}>
-                    <FormControlLabel
-                      value="normal"
-                      control={<Radio disabled={loading} />}
-                      label={personTypeNames['normal']}
-                    />
-                    <FormControlLabel
-                      value="staff"
-                      control={<Radio disabled={loading} />}
-                      label={personTypeNames['staff']}
-                    />
-                    <FormControlLabel
-                      value="shop"
-                      control={<Radio disabled={loading} />}
-                      label={personTypeNames['shop']}
-                    />
+                    {Object.keys(eventInfo.roles).map((role) => (
+                      <FormControlLabel
+                        key={role}
+                        value={role}
+                        control={<Radio disabled={loading} />}
+                        label={eventInfo.roles[role]}
+                      />
+                    ))}
                   </RadioGroup>
                 )}
               />
@@ -150,11 +141,11 @@ export default withErrorPage(StaffCheckIn)
 export const getServerSideProps = getErrorPageProps<StaffCheckInProps>(
   async ({ query, req, res }) => {
     const eventId = query.eventId as string
-    const eventInfo = await getInfo(eventId)
+    const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
-    if (!config.get(eventId, 'isStaff')) {
-      throw new ApiError(403, 'not staff')
-    }
+    // if (!config.get(eventId, 'isStaff')) {
+    //   throw new ApiError(403, 'not staff')
+    // }
     return { props: { eventId, eventInfo } }
   }
 )

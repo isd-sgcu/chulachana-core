@@ -13,14 +13,18 @@ export interface EventInfo {
   name: string
   primaryColor: string
   secondaryColor: string
+  roles: Record<string, string>
 }
 
 export async function getEventInfo(eventId: string): Promise<EventInfo> {
-  const config = await redisClient.hgetall(`config:${eventId}`)
+  const info = await redisClient.hgetall(`config:${eventId}:info`)
+  const roles = await redisClient.hgetall(`config:${eventId}:roles`)
+
   return {
     id: eventId,
-    name: config.name,
-    primaryColor: config.primaryColor,
-    secondaryColor: config.secondaryColor,
+    name: info.name,
+    primaryColor: info.primaryColor,
+    secondaryColor: info.secondaryColor,
+    roles,
   }
 }
