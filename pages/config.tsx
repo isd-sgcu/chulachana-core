@@ -1,6 +1,7 @@
 import { TextField } from '@material-ui/core'
 import Head from 'next/head'
 import { PageLayout } from '../components/PageLayout'
+import { ensureEventExists } from '../models/redis/event'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
 import { ApiError } from '../utils/types'
 import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'
@@ -64,6 +65,16 @@ export const getServerSideProps = getErrorPageProps<ConfigPageProps>(
     const config = new Config(req, res)
     const eventId = query.eventId as string
     if (eventId) {
+      try {
+        ensureEventExists(eventId)
+      } catch {
+        return {
+          unstable_redirect: {
+            permanent: false,
+            destination: `/config`,
+          },
+        }
+      }
       if (query.staffKey !== `staff ${eventId}`) {
         throw new ApiError(403, 'Wrong staff key')
       }
