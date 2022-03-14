@@ -1,5 +1,5 @@
 import { parseISO } from 'date-fns'
-import { influxClient } from '../utils/database'
+import { influxClient } from '../models/clients'
 import { config } from '../utils/env'
 import { PointUserDto } from '../utils/types'
 

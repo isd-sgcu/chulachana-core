@@ -1,5 +1,5 @@
 import pMemoize from 'p-memoize'
-import { influxClient } from '../utils/database'
+import { influxClient } from '../models/clients'
 import { config } from '../utils/env'
 import { ApiError, parseEventIdAllowAll, UserCountDto } from '../utils/types'
 

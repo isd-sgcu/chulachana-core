@@ -1,5 +1,5 @@
 import { HttpError, Point } from '@influxdata/influxdb-client'
-import { influxClient } from '../utils/database'
+import { influxClient } from '../models/clients'
 import { config } from '../utils/env'
 import { ApiError, PointUserDto } from '../utils/types'
 
