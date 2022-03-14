@@ -33,7 +33,7 @@ export default function Footer() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <text x="0" y="10" className={classes.footerText}>
-        © 2020, องค์การบริหารสโมสรนิสิตจุฬาลงกรณ์มหาวิทยาลัย (อบจ.)
+        © 2022, องค์การบริหารสโมสรนิสิตจุฬาลงกรณ์มหาวิทยาลัย (อบจ.)
       </text>
     </svg>
   )

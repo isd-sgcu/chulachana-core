@@ -5,7 +5,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 import { check } from '../../api/check'
-import { ensureEventExists } from '../../models/redis/event'
+import { ensureEventExists } from '../../models/prisma/event'
 import { Config } from '../../utils/config'
 import { ApiError, CheckDto } from '../../utils/types'
 

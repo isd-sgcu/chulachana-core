@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { EventInfo } from '../models/redis/event'
+import { EventInfo } from '../models/prisma/event'
 
 interface EventTitleProps {
   className?: string
@@ -32,7 +32,9 @@ export function EventTitle({ className, eventInfo, role }: EventTitleProps) {
   return (
     <div className={`${classes.container} ${className}`}>
       <h1 className={classes.eventName}>{eventInfo.name}</h1>
-      <h2 className={classes.typeName}>{eventInfo.roles[role]}</h2>
+      <h2 className={classes.typeName}>
+        {eventInfo.roles.find(({ slug }) => slug === role).name}
+      </h2>
     </div>
   )
 }

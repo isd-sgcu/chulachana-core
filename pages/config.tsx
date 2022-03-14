@@ -1,7 +1,7 @@
 import { TextField } from '@material-ui/core'
 import Head from 'next/head'
 import { PageLayout } from '../components/PageLayout'
-import { ensureEventExists } from '../models/redis/event'
+import { ensureEventExists } from '../models/prisma/event'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
 import { ApiError } from '../utils/types'
 import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'

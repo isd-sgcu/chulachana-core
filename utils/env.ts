@@ -6,10 +6,5 @@ export const config = {
     organization: process.env.DB_ORG,
     bucketPrefix: process.env.DB_BUCKET_PREFIX,
   },
-  redis: {
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-    database: parseInt(process.env.REDIS_DB),
-  },
+  databaseURL: process.env.DATABASE_URL,
 }
