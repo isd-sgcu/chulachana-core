@@ -22,7 +22,7 @@ export class Config {
   configMap: any = {}
 
   constructor(req: IncomingMessage, res: ServerResponse) {
-    this.cookies = new Cookies(req, res, { keys: [config.influx.cookiesKey] })
+    this.cookies = new Cookies(req, res, { keys: [config.cookiesKey] })
   }
 
   getNamespace<N extends Key>(namespace: N): Partial<Namespace<N>> {
