@@ -4,22 +4,21 @@ import { th } from 'date-fns/locale'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useMemo } from 'react'
-import Check from '../../components/Check'
-import { EventProvider } from '../../components/EventProvider'
-import { EventTitle } from '../../components/EventTitle'
-import { PageLayout } from '../../components/PageLayout'
-import { SuccessPageWaves } from '../../components/SuccessPageWaves'
-import { EventInfo, getEventInfo } from '../../models/redis/event'
-import { Config } from '../../utils/config'
-import { useEventType } from '../../utils/frontend-utils'
-import { parseEventId } from '../../utils/types'
-import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
+import Check from '../../../components/Check'
+import { EventProvider } from '../../../components/EventProvider'
+import { EventTitle } from '../../../components/EventTitle'
+import { PageLayout } from '../../../components/PageLayout'
+import { SuccessPageWaves } from '../../../components/SuccessPageWaves'
+import { EventInfo, getEventInfo } from '../../../models/redis/event'
+import { Config } from '../../../utils/config'
+import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 export interface SuccessPageProps {
   phone: string
-  checkInDate: number
-  checkOutDate: number
-  eventIdAndType: string
+  checkInTimestamp: number
+  checkOutTimestamp: number
+  eventId: string
+  role: string
   eventInfo: EventInfo
 }
 
@@ -50,29 +49,24 @@ const useStyles = makeStyles({
   },
 })
 
-function SuccessPage({
-  phone,
-  checkInDate,
-  checkOutDate,
-  eventIdAndType,
-  eventInfo,
-}: SuccessPageProps) {
-  const classes = useStyles()
-  const type = useEventType(eventIdAndType)
-  const isCheckOut = !!checkOutDate
-
-  const checkInTime = useMemo(() => {
-    const dm = format(checkInDate, 'd LLLL', { locale: th })
-    const y = `${parseInt(format(checkInDate, 'yyyy')) + 543}`
-    const hhmm = format(checkInDate, 'kk:mm')
+function useCheckInTime(checkInTimestamp: number) {
+  return useMemo(() => {
+    const dm = format(checkInTimestamp, 'd LLLL', { locale: th })
+    const y = `${parseInt(format(checkInTimestamp, 'yyyy')) + 543}`
+    const hhmm = format(checkInTimestamp, 'kk:mm')
     return `${dm} ${y} เวลา ${hhmm} น.`
-  }, [checkInDate])
+  }, [checkInTimestamp])
+}
 
-  const checkInDuration = useMemo(() => {
-    if (!checkInDate || !checkOutDate) {
+function useCheckInDuration(
+  checkInTimestamp: number,
+  checkOutTimestamp: number
+) {
+  return useMemo(() => {
+    if (!checkInTimestamp || !checkOutTimestamp) {
       return null
     }
-    const seconds = (checkOutDate - checkInDate) / 1000
+    const seconds = (checkOutTimestamp - checkInTimestamp) / 1000
     const totalMinutes = Math.ceil(seconds / 60)
     const hours = Math.floor(totalMinutes / 60)
     const minutes = totalMinutes % 60
@@ -84,7 +78,25 @@ function SuccessPage({
       res.push(`${minutes} นาที`)
     }
     return res.join(' ')
-  }, [checkInDate, checkOutDate])
+  }, [checkInTimestamp, checkOutTimestamp])
+}
+
+function SuccessPage({
+  phone,
+  checkInTimestamp,
+  checkOutTimestamp,
+  eventId,
+  role,
+  eventInfo,
+}: SuccessPageProps) {
+  const classes = useStyles()
+  const isCheckOut = !!checkOutTimestamp
+
+  const checkInTime = useCheckInTime(checkInTimestamp)
+  const checkInDuration = useCheckInDuration(
+    checkInTimestamp,
+    checkOutTimestamp
+  )
 
   return (
     <EventProvider eventInfo={eventInfo}>
@@ -102,7 +114,7 @@ function SuccessPage({
           <EventTitle
             className={classes.eventTitle}
             eventInfo={eventInfo}
-            type={type}
+            role={role}
           />
           <p className={classes.timestamp}>
             หมายเลขโทรศัพท์: {phone}
@@ -117,10 +129,10 @@ function SuccessPage({
             )}
           </p>
           <Link
-            href={`/[eventIdAndType]?action=${
+            href={`/[eventId]/[role]?action=${
               isCheckOut ? 'checkin' : 'checkout'
             }`}
-            as={`/${eventIdAndType}?action=${
+            as={`/${eventId}/${role}?action=${
               isCheckOut ? 'checkin' : 'checkout'
             }`}
             passHref
@@ -145,23 +157,28 @@ export default withErrorPage(SuccessPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<SuccessPageProps>(
   async ({ query, req, res }) => {
-    const eventIdAndType = query.eventIdAndType as string
-    const { eventId } = parseEventId(eventIdAndType)
+    const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
     const phone = config.get('core', 'phone')
-    const checkInDate = config.get(eventId, 'checkInDate')
-    const checkOutDate = config.get(eventId, 'checkOutDate')
-    if (!phone || !checkInDate) {
+    const { checkInTimestamp, checkOutTimestamp } = config.getNamespace(eventId)
+    if (!phone || !checkInTimestamp) {
       return {
         unstable_redirect: {
           permanent: false,
-          destination: `/${eventIdAndType}`,
+          destination: `/${eventId}/${role}`,
         },
       }
     }
     return {
-      props: { phone, checkInDate, checkOutDate, eventIdAndType, eventInfo },
+      props: {
+        phone,
+        checkInTimestamp,
+        checkOutTimestamp,
+        eventId,
+        role,
+        eventInfo,
+      },
     }
   }
 )

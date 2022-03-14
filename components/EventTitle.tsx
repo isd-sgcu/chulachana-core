@@ -1,11 +1,10 @@
 import { makeStyles } from '@material-ui/core'
 import { EventInfo } from '../models/redis/event'
-import { PersonType } from '../utils/types'
 
 interface EventTitleProps {
   className?: string
   eventInfo: EventInfo
-  type: PersonType
+  role: string
 }
 
 const useStyles = makeStyles({
@@ -28,12 +27,12 @@ const useStyles = makeStyles({
   },
 })
 
-export function EventTitle({ className, eventInfo, type }: EventTitleProps) {
+export function EventTitle({ className, eventInfo, role }: EventTitleProps) {
   const classes = useStyles()
   return (
     <div className={`${classes.container} ${className}`}>
       <h1 className={classes.eventName}>{eventInfo.name}</h1>
-      <h2 className={classes.typeName}>{eventInfo.roles[type]}</h2>
+      <h2 className={classes.typeName}>{eventInfo.roles[role]}</h2>
     </div>
   )
 }

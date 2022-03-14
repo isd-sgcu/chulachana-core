@@ -11,8 +11,8 @@ export type CoreConfig = {
 
 export type EventConfig = {
   isStaff: boolean
-  checkInDate: number
-  checkOutDate: number
+  checkInTimestamp: number
+  checkOutTimestamp: number
 }
 
 type Namespace<N extends Key> = N extends 'core' ? CoreConfig : EventConfig
