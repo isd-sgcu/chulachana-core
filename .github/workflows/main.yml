@@ -29,6 +29,6 @@ jobs:
         script: |
           cd chulachana-core
           git fetch --all
-          git reset --hard dev
+          git reset --hard origin/dev
           docker-compose -f docker-compose-prod.yml up --force-recreate
 
