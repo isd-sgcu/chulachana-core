@@ -1,23 +1,25 @@
-version: "3.3"
+version: '3.3'
 
 services:
   app:
     container_name: chulachana_web
     build: .
     ports:
-      - "8080:8080"
+      - '8080:8080'
     links:
-      - redis
-  redis:
-    image: redis
+      - postgres
+  postgres:
+    image: postgres:14.2
+    environment:
+      POSTGRES_PASSWORD: x4W4PsQpUT6Bwjm7mEuW7KcFZf4pgb8x
+      POSTGRES_DB: chulachana
     volumes:
-      - redis-data:/data
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  redis-data: {}
+  postgres-data: {}
 
 networks:
   default:
-     external:
-        name: nginx_proxy_manager
-
+    external:
+      name: nginx_proxy_manager
