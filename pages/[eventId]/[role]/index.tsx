@@ -1,18 +1,20 @@
 import { Button, makeStyles } from '@material-ui/core'
+import { Divider } from '@mui/material'
 import Head from 'next/head'
 import Router from 'next/router'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { check } from '../../../api/check'
-import { queryLast } from '../../../api/queryLast'
+import { apiClient, CheckInResponse } from '../../../axios/client'
 import { CheckInFormWaves } from '../../../components/CheckInFormWaves'
 import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
+import { FacultyField } from '../../../components/FacultyField'
+import { NameField } from '../../../components/NameField'
 import { PageLayout } from '../../../components/PageLayout'
 import { PhoneField } from '../../../components/PhoneField'
+import { YearField } from '../../../components/YearField'
 import { EventInfo, getEventInfo } from '../../../models/prisma/event'
-import { Config } from '../../../utils/config'
-import { phoneRegex } from '../../../utils/frontend-utils'
+import { CheckInData, ErrorResponse } from '../../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 interface CheckInPageProps {
@@ -32,11 +34,22 @@ const useStyles = makeStyles({
   textField: {
     fontFamily: 'Noto Sans Thai',
   },
+  container: {
+    height: '100%',
+  },
   inputContainer: {
-    height: 88,
-    marginTop: 50,
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: 10,
+  },
+  subContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 10,
   },
   buttonContainer: {
+    marginTop: 15,
     textAlign: 'center',
   },
 })
@@ -48,11 +61,21 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
     reValidateMode: 'onChange',
   })
 
-  const onSubmit = useCallback(async (data) => {
-    Router.push(
-      `/[eventId]/[role]?phone=${data.phone}`,
-      `/${eventId}/${role}?phone=${data.phone}`
-    )
+  const onSubmit = useCallback(async (data: CheckInData) => {
+    const res: CheckInResponse = await apiClient.checkIn({
+      eventId,
+      role,
+      phone: data.phone,
+      name: data.name,
+      faculty: data.faculty,
+      year: data.year,
+    })
+
+    if (!res.checkin) {
+      console.log((res as unknown as ErrorResponse).conent)
+    }
+
+    Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
   }, [])
 
   return (
@@ -61,12 +84,18 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
         <title>เช็คอินเข้างาน {eventInfo.name}</title>
       </Head>
       <PageLayout wavesComponent={CheckInFormWaves}>
-        <h3 className={classes.checkInHint}>เช็คอินเข้างาน:</h3>
+        <h3 className={classes.checkInHint}>เช็คอินเข้างาน</h3>
         <EventTitle eventInfo={eventInfo} role={role} />
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className={classes.inputContainer}>
               <PhoneField />
+              <NameField />
+              <Divider textAlign="left">เฉพาะนิสิต</Divider>
+              <div className={classes.subContainer}>
+                <FacultyField />
+                <YearField />
+              </div>
             </div>
             <div className={classes.buttonContainer}>
               <Button
@@ -88,44 +117,9 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
 export default withErrorPage(CheckInPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
-  async ({ query, req, res }) => {
+  async ({ query }) => {
     const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
-    const inputPhone = query.phone as string | undefined
-    const config = new Config(req, res)
-    const phone = inputPhone || config.get('core', 'phone')
-
-    if (phone && phone.match(phoneRegex)) {
-      const action = query.action as string | undefined
-      let searchAction = undefined
-      if (action === 'checkout') {
-        // only search for check in action if user wants to check out
-        searchAction = 1
-      } else if (action === 'checkin') {
-        searchAction = 0
-      }
-      const lastResult = await queryLast(eventId, phone, role, searchAction)
-      // check out if last action is check in
-      const checkIn = lastResult?._value !== 1
-      const currentDate = await check(eventId, phone, role, checkIn ? 1 : 0)
-      const time = currentDate.getTime()
-
-      config.set('core', 'phone', phone)
-      config.set(
-        eventId,
-        'checkInTimestamp',
-        checkIn ? time : lastResult._time.getTime()
-      )
-      config.set(eventId, 'checkOutTimestamp', checkIn ? null : time)
-
-      return {
-        unstable_redirect: {
-          permanent: false,
-          destination: `/${eventId}/${role}/success`,
-        },
-      }
-    }
-    config.getNamespace(eventId)
     return {
       props: {
         eventId,
