@@ -1,8 +1,14 @@
+import { Role, Year } from '@prisma/client'
 import { ApiError } from 'next/dist/next-server/server/api-utils'
+import { FacultyID } from './enum'
 export { ApiError }
 
-export type PersonType = 'normal' | 'staff' | 'shop'
+export interface ErrorResponse {
+  conent: string
+  statusCode: number
+}
 
+export type PersonType = 'normal' | 'staff' | 'shop'
 export interface CheckDto {
   eventid: string
   phone: string
@@ -17,6 +23,29 @@ export interface PointUserDto {
   type: PersonType
   _field: 'in_event'
   _value: 0 | 1 // 0 for checkin, 1 for checkout
+}
+
+export interface UserInfo {
+  phone: string
+  name: string
+  faculty: FacultyID
+  year: Year
+}
+
+export interface Entry {
+  _time: Date
+  eventid: string
+  phone: string
+  name: string
+  faculty: string
+  role: Role
+}
+
+export interface CheckInData {
+  phone: string
+  name: string
+  faculty: FacultyID
+  year: Year
 }
 
 export interface UserCountDto {
