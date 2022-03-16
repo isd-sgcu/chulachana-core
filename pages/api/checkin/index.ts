@@ -8,7 +8,6 @@ import validator from 'validator'
 import { check } from '../../../api/check'
 import { findLatestEntryWithUser } from '../../../models/prisma/entry'
 import { Config } from '../../../utils/config'
-import { facultyList } from '../../../utils/constant'
 import { FacultyID, Type } from '../../../utils/enum'
 import { ApiError } from '../../../utils/types'
 
@@ -57,9 +56,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       !checkinDto.phone ||
       !validator.isMobilePhone(checkinDto.phone, 'th-TH', {
         strictMode: false,
-      }) ||
-      !facultyList[checkinDto.faculty.toString()] ||
-      !Year[checkinDto.year]
+      })
     ) {
       throw new ApiError(
         400,
