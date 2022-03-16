@@ -41,5 +41,5 @@ export async function check(
 
   const entry: Entry = await createEntry(entryInfo)
 
-  return new Date(entry.timestamp * 1000)
+  return new Date(entry.timestamp)
 }
