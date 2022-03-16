@@ -2,7 +2,6 @@ import {
   Entry,
   EntryType,
   Event,
-  Prisma,
   PrismaClient,
   Role,
   User,
@@ -19,7 +18,6 @@ interface CreateRoleProps {
 }
 
 async function createRole({ event, slug, name }: CreateRoleProps) {
-  let a: Prisma.EventWhereUniqueInput
   const role = await prisma.role.create({
     data: {
       slug,
@@ -70,7 +68,6 @@ async function check({
         user: { connect: { id: user.id } },
         event: { connect: { id: event.id } },
         role: { connect: { id: role.id } },
-        timestamp: Math.round(Date.now() / 1000),
         type,
       },
     }),
@@ -108,7 +105,6 @@ async function seed() {
     },
   })
 
-  await prisma.role.deleteMany({})
   const roleVisitor = await createRole({
     event,
     slug: 'visitor',
@@ -151,6 +147,12 @@ async function seed() {
     type: EntryType.IN,
   })
   await check({
+    user: user2,
+    event,
+    role: roleCUStaff,
+    type: EntryType.OUT,
+  })
+  await check({
     user: user1,
     event,
     role: roleVisitor,
@@ -160,6 +162,12 @@ async function seed() {
     user: user1,
     event,
     role: roleVisitor,
+    type: EntryType.IN,
+  })
+  await check({
+    user: user3,
+    event,
+    role: roleExtStaff,
     type: EntryType.IN,
   })
 }
