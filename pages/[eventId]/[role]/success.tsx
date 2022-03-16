@@ -2,8 +2,9 @@ import { Button, makeStyles } from '@material-ui/core'
 import { format } from 'date-fns'
 import { th } from 'date-fns/locale'
 import Head from 'next/head'
-import Link from 'next/link'
+import Router from 'next/router'
 import { useMemo } from 'react'
+import { apiClient } from '../../../axios/client'
 import Check from '../../../components/Check'
 import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
@@ -20,6 +21,12 @@ export interface SuccessPageProps {
   eventId: string
   role: string
   eventInfo: EventInfo
+}
+
+export interface CheckOutDto {
+  eventId: string
+  role: string
+  phone: string
 }
 
 const useStyles = makeStyles({
@@ -81,6 +88,25 @@ function useCheckInDuration(
   }, [checkInTimestamp, checkOutTimestamp])
 }
 
+const handleClick = async (phone, role, eventId, isCheckout) => {
+  const data = {
+    phone,
+    eventId,
+    role,
+  }
+
+  if (!isCheckout) {
+    await apiClient.checkOut(data)
+  } else {
+    await apiClient.checkIn(data)
+  }
+
+  Router.push(
+    `/[eventId]/[role]/success?action=${isCheckout ? 'checkin' : 'checkout'}`,
+    `/${eventId}/${role}/success?action=${isCheckout ? 'checkin' : 'checkout'}`
+  )
+}
+
 function SuccessPage({
   phone,
   checkInTimestamp,
@@ -128,25 +154,16 @@ function SuccessPage({
               </>
             )}
           </p>
-          <Link
-            href={`/[eventId]/[role]?action=${
-              isCheckOut ? 'checkin' : 'checkout'
-            }`}
-            as={`/${eventId}/${role}?action=${
-              isCheckOut ? 'checkin' : 'checkout'
-            }`}
-            passHref
+          <Button
+            className={classes.button}
+            type="submit"
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={() => handleClick(phone, role, eventId, isCheckOut)}
           >
-            <Button
-              className={classes.button}
-              type="submit"
-              variant="contained"
-              color="primary"
-              disableElevation
-            >
-              {isCheckOut ? 'เช็คอินอีกครั้ง' : 'เช็คเอาท์'}
-            </Button>
-          </Link>
+            {isCheckOut ? 'เช็คอินอีกครั้ง' : 'เช็คเอาท์'}
+          </Button>
         </div>
       </PageLayout>
     </EventProvider>
