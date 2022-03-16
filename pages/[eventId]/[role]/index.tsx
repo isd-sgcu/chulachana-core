@@ -2,7 +2,7 @@ import { Button, makeStyles } from '@material-ui/core'
 import { Divider } from '@mui/material'
 import Head from 'next/head'
 import Router from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { apiClient, CheckInResponse } from '../../../axios/client'
 import { CheckInFormWaves } from '../../../components/CheckInFormWaves'
@@ -14,6 +14,7 @@ import { PageLayout } from '../../../components/PageLayout'
 import { PhoneField } from '../../../components/PhoneField'
 import { YearField } from '../../../components/YearField'
 import { EventInfo, getEventInfo } from '../../../models/prisma/event'
+import { Config } from '../../../utils/config'
 import { CheckInData, ErrorResponse } from '../../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
@@ -21,6 +22,7 @@ interface CheckInPageProps {
   eventId: string
   role: string
   eventInfo: EventInfo
+  phone: string
 }
 
 const useStyles = makeStyles({
@@ -55,11 +57,27 @@ const useStyles = makeStyles({
 })
 
 // TODO: use this page for checkin/checkout only, and move the form to another page
-function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
+function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   const classes = useStyles()
   const methods = useForm({
     reValidateMode: 'onChange',
   })
+
+  //FIXME: component render before response complete validate
+  useEffect(() => {
+    const checkIn = async () => {
+      const res: CheckInResponse = await apiClient.checkIn({
+        eventId,
+        role,
+        phone,
+      })
+
+      if (res.checkin) {
+        Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
+      }
+    }
+    checkIn()
+  }, [])
 
   const onSubmit = useCallback(async (data: CheckInData) => {
     const res: CheckInResponse = await apiClient.checkIn({
@@ -70,9 +88,9 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
       faculty: data.faculty,
       year: data.year,
     })
-
     if (!res.checkin) {
       //TODO: Display the error message on UI
+      console.log((res as unknown as ErrorResponse).content)
     }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
@@ -117,14 +135,17 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
 export default withErrorPage(CheckInPage, { ensureEventExists: true })
 
 export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
-  async ({ query }) => {
+  async ({ query, req, res }) => {
     const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
+    const config = new Config(req, res)
+    const phone = config.get('core', 'phone')
     return {
       props: {
         eventId,
         role,
         eventInfo,
+        phone,
       },
     }
   }
