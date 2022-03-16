@@ -31,6 +31,7 @@ export async function getEventInfo(eventId: string): Promise<EventInfo> {
     include: {
       roles: {
         select: {
+          id: true,
           slug: true,
           name: true,
         },
