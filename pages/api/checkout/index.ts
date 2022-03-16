@@ -2,13 +2,15 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
+import { Entry } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
-import { check } from '../../api/check'
-import { queryLast } from '../../api/queryLast'
-import { ensureEventExists } from '../../models/prisma/event'
-import { Config } from '../../utils/config'
-import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
+import { check } from '../../../api/check'
+import { findLatestEntryWithUser } from '../../../models/prisma/entry'
+import { Config } from '../../../utils/config'
+import { Type } from '../../../utils/enum'
+import { ApiError } from '../../../utils/types'
+import { CheckinDTO } from '../checkin'
 
 /*
  * Check In API
@@ -37,34 +39,33 @@ import { ApiError, CheckDto, PointUserDto } from '../../utils/types'
  */
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const body = req.body as CheckDto
+    const checkinDto = req.body as CheckinDTO
+
     // Input Validation
     if (
-      !body.eventid ||
-      !validator.isAlphanumeric(body.eventid) ||
-      !body.phone ||
-      !validator.isMobilePhone(body.phone, 'th-TH', { strictMode: false }) ||
-      !body.type ||
-      !(body.type === 'normal' || body.type === 'staff' || body.type === 'shop')
+      !checkinDto.phone ||
+      !validator.isMobilePhone(checkinDto.phone, 'th-TH', {
+        strictMode: false,
+      })
     ) {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
 
-    const eventId = body.eventid
-    ensureEventExists(eventId)
-    const config = new Config(req, res)
-    if (!config.get(eventId, 'isStaff')) {
-      throw new ApiError(403, 'not staff')
+    const entry: Entry = await findLatestEntryWithUser(checkinDto.phone)
+
+    if (entry.type === Type.OUT) {
+      throw new ApiError(403, 'You have already checked out')
     }
 
-    const lastCheckinPoint = (await queryLast(
-      body.eventid,
-      body.phone,
-      body.type,
-      1
-    )) as PointUserDto
-    const checkinDate = lastCheckinPoint ? lastCheckinPoint._time : null
-    const checkoutDate = await check(body.eventid, body.phone, body.type, 0)
+    const checkinDate: Date = entry.timestamp
+    const checkoutDate: Date = await check(checkinDto, Type.OUT)
+
+    const config = new Config(req, res)
+    const phone = checkinDto.phone || config.get('core', 'phone')
+
+    config.set('core', 'phone', phone)
+    config.set(checkinDto.eventId, 'checkOutTimestamp', checkoutDate.getTime())
+
     res.json({
       checkin: checkinDate,
       checkout: checkoutDate,
