@@ -56,7 +56,7 @@ export async function dtoToRawEntry(
         id: role.id,
       },
     },
-    timestamp: Math.round(Date.now() / 1000),
+    timestamp: new Date(),
     type: type,
   }
   return entryInfo
