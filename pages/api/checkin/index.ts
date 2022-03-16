@@ -2,12 +2,14 @@
 // InfluxDB Client Documentation: https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/js/
 // InfluxDB Client Examples: https://github.com/influxdata/influxdb-client-js/tree/master/examples
 
+import { Year } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
 import { check } from '../../../api/check'
 import { findLatestEntryWithUser } from '../../../models/prisma/entry'
+import { Config } from '../../../utils/config'
 import { facultyList } from '../../../utils/constant'
-import { Type } from '../../../utils/enum'
+import { FacultyID, Type } from '../../../utils/enum'
 import { ApiError } from '../../../utils/types'
 
 /*
@@ -40,8 +42,8 @@ export interface CheckinDTO {
   role: string
   phone: string
   name?: string
-  faculty?: string
-  year: number
+  faculty?: FacultyID
+  year?: Year
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -56,8 +58,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       !validator.isMobilePhone(checkinDto.phone, 'th-TH', {
         strictMode: false,
       }) ||
-      !facultyList[checkinDto.faculty] ||
-      !(checkinDto.year > 0)
+      !facultyList[checkinDto.faculty.toString()] ||
+      !Year[checkinDto.year]
     ) {
       throw new ApiError(
         400,
@@ -73,11 +75,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     ) {
       throw new ApiError(
         403,
-        'Cannot login to the event that you are already in'
+        'You already checked in at this event. Please check out first.'
       )
     }
 
     const checkinDate: Date = await check(checkinDto, Type.IN)
+
+    const config = new Config(req, res)
+    const phone = checkinDto.phone || config.get('core', 'phone')
+
+    config.set('core', 'phone', phone)
+    config.set(checkinDto.eventId, 'checkInTimestamp', checkinDate.getTime())
+    config.set(checkinDto.eventId, 'checkOutTimestamp', null)
+
     res.json({ checkin: checkinDate })
   } else {
     // Other than POST Method
