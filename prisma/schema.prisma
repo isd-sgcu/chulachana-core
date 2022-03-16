@@ -35,7 +35,10 @@ model Role {
 model User {
   id Int @id @default(autoincrement())
 
-  phone String @unique
+  phone   String @unique
+  name    String
+  faculty String
+  year    Year
 
   currentEvents Event[]
   entries       Entry[]
@@ -57,4 +60,17 @@ model Entry {
 enum EntryType {
   IN
   OUT
+}
+
+enum Year {
+  Y1
+  Y2
+  Y3
+  Y4
+  Y5
+  Y6
+  Y7
+  Y8
+  MASTER_DEGREE
+  PHD
 }
