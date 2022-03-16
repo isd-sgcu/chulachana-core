@@ -72,7 +72,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
         phone,
       })
 
-      if (res.checkin) {
+      if (res.checkin || (res as ErrorResponse).statusCode === 403) {
         Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
       }
     }
