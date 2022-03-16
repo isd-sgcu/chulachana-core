@@ -4,7 +4,7 @@ import { FacultyID } from './enum'
 export { ApiError }
 
 export interface ErrorResponse {
-  conent: string
+  content: string
   statusCode: number
 }
 

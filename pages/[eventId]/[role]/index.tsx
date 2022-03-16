@@ -72,7 +72,7 @@ function CheckInPage({ eventId, role, eventInfo }: CheckInPageProps) {
     })
 
     if (!res.checkin) {
-      console.log((res as unknown as ErrorResponse).conent)
+      //TODO: Display the error message on UI
     }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)

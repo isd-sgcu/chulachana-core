@@ -25,7 +25,7 @@ const checkIn = async (
     return res.data
   } catch (err) {
     return {
-      conent: err.response.data,
+      content: err.response.data,
       statusCode: err.response.status,
     }
   }
@@ -42,7 +42,7 @@ const checkOut = async (
     return res.data
   } catch (err) {
     return {
-      conent: err.response.data,
+      content: err.response.data,
       statusCode: err.response.status,
     }
   }
