@@ -36,10 +36,10 @@ model Role {
 model User {
   id Int @id @default(autoincrement())
 
-  phone   String @unique
+  phone   String  @unique
   name    String
-  faculty String
-  year    Year
+  faculty String?
+  year    Year?
 
   entries       Entry[]
   currentEvents UserInEvent[]
