@@ -1,3 +1,6 @@
+import { Year } from '@prisma/client'
+import { FacultyID } from './enum'
+
 export const allowedCorsDomains = [
   'http://localhost:3000',
   'https://loykrathongcu.com',
@@ -83,3 +86,121 @@ export const facultyList = {
     facultyTh: 'ศูนย์การศึกษาทั่วไป',
   },
 }
+
+export const facultySelectionList = [
+  {
+    value: FacultyID.ENGINEER,
+    content: 'คณะวิศวกรรมศาสตร์',
+  },
+  {
+    value: FacultyID.ARTS,
+    content: 'คณะอักษรศาสตร์',
+  },
+  {
+    value: FacultyID.SCIENCE,
+    content: 'คณะวิทยาศาสตร์',
+  },
+  {
+    value: FacultyID.POLITICAL_SCIENCE,
+    content: 'คณะรัฐศาสตร์',
+  },
+  {
+    value: FacultyID.ARCHITECTURE,
+    content: 'คณะสถาปัตยกรรมศาสตร์',
+  },
+  {
+    value: FacultyID.COMMERCE_ACCOUNTANCY,
+    content: 'คณะพาณิชยศาสตร์และการบัญชี',
+  },
+  {
+    value: FacultyID.EDUCATION,
+    content: 'คณะครุศาสตร์',
+  },
+  {
+    value: FacultyID.ECONOMICS,
+    content: 'คณะเศรษฐศาสตร์',
+  },
+  {
+    value: FacultyID.MEDICINE,
+    content: 'คณะแพทยศาสตร์',
+  },
+  {
+    value: FacultyID.VETERINARY_SCIENCE,
+    content: 'คณะสัตวแพทยศาสตร์',
+  },
+  {
+    value: FacultyID.DENTISTRY,
+    content: 'คณะทันตแพทยศาสตร์',
+  },
+  {
+    value: FacultyID.PHARMACUTICAL,
+    content: 'คณะสัตวแพทยศาสตร์',
+  },
+  {
+    value: FacultyID.LAW,
+    content: 'คณะนิติศาสตร์',
+  },
+  {
+    value: FacultyID.FINE_ARTS,
+    content: 'คณะศิลปกรรมศาสตร์',
+  },
+  {
+    value: FacultyID.NURSING,
+    content: 'คณะพยาบาลศาสตร์',
+  },
+  {
+    value: FacultyID.PSYCHOLOGY,
+    content: 'คณะจิตวิทยา',
+  },
+  {
+    value: FacultyID.SPORT_SCIENCE,
+    content: 'คณะวิทยาศาสตร์การกีฬา',
+  },
+  {
+    value: FacultyID.AGRICULTURAL_RESOURCES,
+    content: 'สำนักวิชาทรัพยากรการเกษตร',
+  },
+]
+
+export const yearSelectionList = [
+  {
+    value: Year.Y1,
+    content: 'ปีที่ 1',
+  },
+  {
+    value: Year.Y2,
+    content: 'ปีที่ 2',
+  },
+  {
+    value: Year.Y3,
+    content: 'ปีที่ 3',
+  },
+  {
+    value: Year.Y4,
+    content: 'ปีที่ 4',
+  },
+  {
+    value: Year.Y5,
+    content: 'ปีที่ 5',
+  },
+  {
+    value: Year.Y6,
+    content: 'ปีที่ 6',
+  },
+  {
+    value: Year.Y7,
+    content: 'ปีที่ 7',
+  },
+  {
+    value: Year.Y8,
+    content: 'ปีที่ 8',
+  },
+  {
+    value: Year.MASTER,
+    content: 'ปริญญาโท',
+  },
+  {
+    value: Year.PHD,
+    content: 'ปริญญาเอก',
+  },
+]
