@@ -38,7 +38,7 @@ model User {
 
   phone   String  @unique
   name    String
-  faculty String?
+  faculty Int?
   year    Year?
 
   entries       Entry[]
