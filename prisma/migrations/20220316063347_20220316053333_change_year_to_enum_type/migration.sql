@@ -5,7 +5,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "Year" AS ENUM ('Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'MASTER_DEGREE', 'PHD');
+CREATE TYPE "Year" AS ENUM ('Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'MASTER', 'PHD');
 
 -- AlterTable
 ALTER TABLE "User" DROP COLUMN "year",
