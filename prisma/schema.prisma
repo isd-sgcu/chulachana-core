@@ -65,7 +65,7 @@ model Entry {
   roleId  Int
   role    Role   @relation(fields: [roleId], references: [id])
 
-  timestamp Int
+  timestamp DateTime  @default(now())
   type      EntryType
 }
 
