@@ -9,26 +9,19 @@ export async function createEntry(
   return entry
 }
 
-export async function findLatestEntryWithUser(phone: string) {
+export async function findLatestEntryWithUser(phone: string, eventId: string) {
   const entry = await prisma.entry.findFirst({
     orderBy: {
       timestamp: 'desc',
     },
     where: {
+      eventId,
       user: {
         phone,
       },
     },
     include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          phone: true,
-          year: true,
-          faculty: true,
-        },
-      },
+      user: true,
       role: {
         select: {
           slug: true,
@@ -61,8 +54,7 @@ export async function dtoToRawEntry(
         id: role.id,
       },
     },
-    timestamp: new Date(),
-    type: type,
+    type,
   }
   return entryInfo
 }

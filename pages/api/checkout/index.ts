@@ -51,7 +51,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'Invalid eventid, type, or phone number')
     }
 
-    const entry: Entry = await findLatestEntryWithUser(checkinDto.phone)
+    const entry: Entry = await findLatestEntryWithUser(
+      checkinDto.phone,
+      checkinDto.eventId
+    )
 
     if (entry.type === Type.OUT) {
       throw new ApiError(403, 'You have already checked out')

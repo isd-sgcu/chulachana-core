@@ -64,7 +64,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )
     }
 
-    const entry = await findLatestEntryWithUser(checkinDto.phone)
+    const entry = await findLatestEntryWithUser(
+      checkinDto.phone,
+      checkinDto.eventId
+    )
 
     if (
       entry &&
