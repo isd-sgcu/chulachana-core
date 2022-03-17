@@ -84,10 +84,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (entry && entry.type === Type.IN) {
       if (entry.role.slug !== checkinDto.role) {
         data.role = entry.role.slug
+        await check(data, Type.OUT)
+
+        data.role = checkinDto.role
+        checkInDate = await check(data, Type.IN)
+      } else {
+        checkInDate = entry.timestamp
+        checkOutDate = await check(data, Type.OUT)
       }
-      checkInDate = entry.timestamp
-      checkOutDate = await check(data, Type.OUT)
-    } else if (entry && entry.type === Type.OUT) {
+    } else {
       checkInDate = await check(data, Type.IN)
     }
 
