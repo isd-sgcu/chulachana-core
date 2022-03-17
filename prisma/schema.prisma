@@ -18,8 +18,8 @@ model Event {
   secondaryColor String
 
   roles        Role[]
-  currentUsers User[]
   entries      Entry[]
+  currentUsers UserInEvent[]
 }
 
 model Role {
@@ -27,18 +27,33 @@ model Role {
   event   Event  @relation(fields: [eventId], references: [id])
   eventId String
 
-  slug    String
-  name    String
-  entries Entry[]
+  slug          String
+  name          String
+  entries       Entry[]
+  currentEvents UserInEvent[]
 }
 
 model User {
   id Int @id @default(autoincrement())
 
-  phone String @unique
+  phone   String  @unique
+  name    String
+  faculty String?
+  year    Year?
 
-  currentEvents Event[]
   entries       Entry[]
+  currentEvents UserInEvent[]
+}
+
+model UserInEvent {
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String
+  role    Role   @relation(fields: [roleId], references: [id])
+  roleId  Int
+
+  @@id([userId, eventId])
 }
 
 model Entry {
@@ -50,11 +65,24 @@ model Entry {
   roleId  Int
   role    Role   @relation(fields: [roleId], references: [id])
 
-  timestamp Int
+  timestamp DateTime  @default(now())
   type      EntryType
 }
 
 enum EntryType {
   IN
   OUT
+}
+
+enum Year {
+  Y1
+  Y2
+  Y3
+  Y4
+  Y5
+  Y6
+  Y7
+  Y8
+  MASTER
+  PHD
 }

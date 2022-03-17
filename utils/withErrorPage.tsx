@@ -4,7 +4,7 @@ import { EventInfo } from '../models/prisma/event'
 import ErrorPage from '../pages/_error'
 
 export interface ErrorPageProps<P> {
-  pageProps?: P & { eventInfo?: EventInfo }
+  pageProps?: P & { eventInfo?: EventInfo; errorCode?: number }
   errorCode?: number
 }
 
@@ -19,6 +19,10 @@ export function withErrorPage<P>(
   }
 ): React.ComponentType<ErrorPageProps<P>> & ErrorPageOptions {
   function withErrorPage(props: ErrorPageProps<P>) {
+    if (props.pageProps.errorCode) {
+      return <ErrorPage statusCode={props.pageProps.errorCode} />
+    }
+
     if (props.errorCode) {
       return <ErrorPage statusCode={props.errorCode} />
     }
