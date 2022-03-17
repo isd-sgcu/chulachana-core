@@ -10,10 +10,19 @@ export async function createEntry(
 ): Promise<Entry> {
   const userInEventOperation =
     type === EntryType.IN
-      ? prisma.userInEvent.create({
-          data: {
+      ? prisma.userInEvent.upsert({
+          where: {
+            userId_eventId: {
+              userId: user.id,
+              eventId: checkInDto.eventId,
+            },
+          },
+          create: {
             userId: user.id,
             eventId: checkInDto.eventId,
+            roleId: role.id,
+          },
+          update: {
             roleId: role.id,
           },
         })

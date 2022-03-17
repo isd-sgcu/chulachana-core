@@ -108,7 +108,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   }, [phone, eventId, role, Router])
 
   const onSubmit = useCallback(async (data: CheckInFormData) => {
-    const res = await apiClient.checkIn({
+    const res = await apiClient.check({
       eventId,
       role,
       phone: data.phone,
@@ -116,9 +116,6 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       faculty: data.faculty,
       year: data.year,
     })
-    if (!res.data.checkIn) {
-      alert(res.data)
-    }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
   }, [])
