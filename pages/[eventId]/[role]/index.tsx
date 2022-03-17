@@ -136,11 +136,6 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
               <div className={classes.inputContainer}>
                 <PhoneField />
                 <NameField />
-                {/* <Divider textAlign="left">เฉพาะนิสิต</Divider>
-                <div className={classes.subContainer}>
-                  <FacultyField />
-                  <YearField />
-                </div> */}
               </div>
               <div className={classes.buttonContainer}>
                 <Button
