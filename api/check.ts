@@ -2,11 +2,11 @@ import { EntryType, Role, User } from '@prisma/client'
 import { createEntry, dtoToRawEntry } from '../models/prisma/entry'
 import { EventInfo, getEventInfo } from '../models/prisma/event'
 import { createUser, findUserByPhone } from '../models/prisma/user'
-import { CheckinDTO } from '../pages/api/checkin'
+import { CheckInDto } from '../pages/api/checkin'
 import { ApiError, UserInfo } from '../utils/types'
 
 export async function check(
-  checkinDto: CheckinDTO,
+  checkinDto: CheckInDto,
   type: EntryType
 ): Promise<Date> {
   // Initialize

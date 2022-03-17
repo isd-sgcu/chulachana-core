@@ -1,5 +1,5 @@
 import { Entry, EntryType, Prisma, Role, User } from '@prisma/client'
-import { CheckinDTO } from '../../pages/api/checkin'
+import { CheckInDto } from '../../pages/api/checkin'
 import { prisma } from '../clients'
 
 export async function createEntry(
@@ -33,7 +33,7 @@ export async function findLatestEntryWithUser(phone: string, eventId: string) {
 }
 
 export async function dtoToRawEntry(
-  checkInDto: CheckinDTO,
+  checkInDto: CheckInDto,
   user: User,
   role: Role,
   type: EntryType

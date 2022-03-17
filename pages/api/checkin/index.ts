@@ -36,7 +36,7 @@ import { ApiError } from '../../../utils/types'
  * 500: Internal Server (When writing into database)
  */
 
-export interface CheckinDTO {
+export interface CheckInDto {
   eventId: string
   role: string
   phone: string
@@ -47,7 +47,7 @@ export interface CheckinDTO {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const checkinDto = req.body as CheckinDTO
+    const checkinDto = req.body as CheckInDto
 
     // Input Validation
     if (

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
-import { CheckinDTO } from '../pages/api/checkin'
-import { CheckOutDto } from '../pages/[eventId]/[role]/success'
+import { CheckInDto } from '../pages/api/checkin'
+import { CheckOutDto } from '../pages/api/checkout'
 
 const client = axios.create({ withCredentials: true })
 
@@ -14,7 +14,7 @@ export interface CheckOutResponse {
 }
 
 const checkIn = async (
-  checkInDto: CheckinDTO
+  checkInDto: CheckInDto
 ): Promise<AxiosResponse<CheckInResponse>> => {
   const res = await client.post('/api/checkin', checkInDto)
   return res

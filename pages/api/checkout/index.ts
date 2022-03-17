@@ -39,7 +39,7 @@ import { CheckinDTO } from '../checkin'
  */
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const checkinDto = req.body as CheckinDTO
+    const checkinDto = req.body as CheckOutDto
 
     // Input Validation
     if (
