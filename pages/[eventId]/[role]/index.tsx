@@ -66,16 +66,13 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   //FIXME: component render before response complete validate
   useEffect(() => {
     const checkIn = async () => {
-      const res: unknown = await apiClient.checkIn({
+      const res = await apiClient.checkIn({
         eventId,
         role,
         phone,
       })
 
-      if (
-        (res as CheckInResponse).checkin ||
-        (res as ErrorResponse).statusCode === 403
-      ) {
+      if (res.data.checkIn || res.status === 403) {
         Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
       }
     }
@@ -83,7 +80,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   }, [])
 
   const onSubmit = useCallback(async (data: CheckInData) => {
-    const res: unknown = await apiClient.checkIn({
+    const res = await apiClient.checkIn({
       eventId,
       role,
       phone: data.phone,
@@ -91,9 +88,9 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       faculty: data.faculty,
       year: data.year,
     })
-    if (!(res as CheckInResponse).checkin) {
+    if (!res.data.checkIn) {
       //TODO: Display the error message on UI
-      console.log((res as ErrorResponse).content)
+      console.log(res.data)
     }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
