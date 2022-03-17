@@ -1,5 +1,6 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
 import { ComponentType, CSSProperties, PropsWithChildren } from 'react'
+import { apiClient } from '../axios/client'
 import Footer from './Footer'
 
 type PageLayoutProps = PropsWithChildren<{
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       maxWidth: 376,
       padding: 28,
+      textAlign: 'center',
     },
     '@media (min-height: 727px)': {
       container: {
@@ -72,6 +74,11 @@ const useStyles = makeStyles((theme: Theme) =>
         '0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)',
       borderRadius: 4,
     },
+    clearCookieText: {
+      color: 'white',
+      fontSize: '0.75rem',
+      textDecoration: 'underline',
+    },
   })
 )
 
@@ -103,7 +110,27 @@ export function PageLayout({
           </div>
         )}
         <Footer />
+        <ClearCookiesButton />
       </div>
     </div>
+  )
+}
+
+function ClearCookiesButton() {
+  const classes = useStyles()
+
+  async function handleClick() {
+    try {
+      await apiClient.clearCookies()
+      alert('เคลียร์คุกกี้เรียบร้อยแล้ว')
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  return (
+    <Button className={classes.clearCookieText} onClick={handleClick}>
+      เคลียร์คุกกี้
+    </Button>
   )
 }

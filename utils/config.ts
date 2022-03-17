@@ -79,4 +79,8 @@ export class Config {
     }
     this.setNamespace(namespace, conf)
   }
+
+  clearNamespace<N extends Key>(namespace: N) {
+    this.cookies.set(`config-${namespace}`, undefined, { expires: new Date(0) })
+  }
 }

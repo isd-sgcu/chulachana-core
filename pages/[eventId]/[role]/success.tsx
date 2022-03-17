@@ -1,4 +1,4 @@
-import { Button,makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 import { format } from 'date-fns'
 import { th } from 'date-fns/locale'
 import Head from 'next/head'
@@ -10,9 +10,9 @@ import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
 import { PageLayout } from '../../../components/PageLayout'
 import { SuccessPageWaves } from '../../../components/SuccessPageWaves'
-import { EventInfo,getEventInfo } from '../../../models/prisma/event'
+import { EventInfo, getEventInfo } from '../../../models/prisma/event'
 import { Config } from '../../../utils/config'
-import { getErrorPageProps,withErrorPage } from '../../../utils/withErrorPage'
+import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 export interface SuccessPageProps {
   phone: string

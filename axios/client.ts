@@ -34,8 +34,13 @@ const check = async (
   return res
 }
 
+const clearCookies = async () => {
+  await client.post('/api/clear-cookies')
+}
+
 export const apiClient = {
   checkIn,
   checkOut,
   check,
+  clearCookies,
 }
