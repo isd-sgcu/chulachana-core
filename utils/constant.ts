@@ -9,51 +9,51 @@ export const allowedCorsDomains = [
 
 export const facultyList = {
   '20': { facultyEn: 'Graduate School', facultyTh: 'บัณฑิตวิทยาลัย' },
-  '21': { facultyEn: 'Faculty of Engineering', facultyTh: 'คณะวิศวกรรมศาสตร์' },
-  '22': { facultyEn: 'Faculty of Arts', facultyTh: 'คณะอักษรศาสตร์' },
-  '23': { facultyEn: 'Faculty of Science', facultyTh: 'คณะวิทยาศาสตร์' },
+  '21': { facultyEn: 'Engineering', facultyTh: 'วิศวกรรมศาสตร์' },
+  '22': { facultyEn: 'Arts', facultyTh: 'อักษรศาสตร์' },
+  '23': { facultyEn: 'Science', facultyTh: 'วิทยาศาสตร์' },
   '24': {
-    facultyEn: 'Faculty of Political Science',
-    facultyTh: 'คณะรัฐศาสตร์',
+    facultyEn: 'Political Science',
+    facultyTh: 'รัฐศาสตร์',
   },
   '25': {
-    facultyEn: 'Faculty of Architecture',
-    facultyTh: 'คณะสถาปัตยกรรมศาสตร์',
+    facultyEn: 'Architecture',
+    facultyTh: 'สถาปัตยกรรมศาสตร์',
   },
   '26': {
-    facultyEn: 'Faculty of Commerce And Accountancy',
-    facultyTh: 'คณะพาณิชยศาสตร์และการบัญชี',
+    facultyEn: 'Commerce And Accountancy',
+    facultyTh: 'พาณิชยศาสตร์และการบัญชี',
   },
-  '27': { facultyEn: 'Faculty of Education', facultyTh: 'คณะครุศาสตร์' },
+  '27': { facultyEn: 'Education', facultyTh: 'ครุศาสตร์' },
   '28': {
-    facultyEn: 'Faculty of Communication Arts',
-    facultyTh: 'คณะนิเทศศาสตร์',
+    facultyEn: 'Communication Arts',
+    facultyTh: 'นิเทศศาสตร์',
   },
-  '29': { facultyEn: 'Faculty of Economics', facultyTh: 'คณะเศรษฐศาสตร์' },
-  '30': { facultyEn: 'Faculty of Medicine', facultyTh: 'คณะแพทยศาสตร์' },
+  '29': { facultyEn: 'Economics', facultyTh: 'เศรษฐศาสตร์' },
+  '30': { facultyEn: 'Medicine', facultyTh: 'แพทยศาสตร์' },
   '31': {
-    facultyEn: 'Faculty of Veterinary Science',
-    facultyTh: 'คณะสัตวแพทยศาสตร์',
+    facultyEn: 'Veterinary Science',
+    facultyTh: 'สัตวแพทยศาสตร์',
   },
-  '32': { facultyEn: 'Faculty of Dentistry', facultyTh: 'คณะทันตแพทยศาสตร์' },
+  '32': { facultyEn: 'Dentistry', facultyTh: 'ทันตแพทยศาสตร์' },
   '33': {
-    facultyEn: 'Faculty of Pharmaceutical Sciences',
-    facultyTh: 'คณะเภสัชศาสตร์',
+    facultyEn: 'Pharmaceutical Sciences',
+    facultyTh: 'เภสัชศาสตร์',
   },
-  '34': { facultyEn: 'Faculty of Law', facultyTh: 'คณะนิติศาสตร์' },
+  '34': { facultyEn: 'Law', facultyTh: 'นิติศาสตร์' },
   '35': {
-    facultyEn: 'Faculty of Fine And Applied Arts',
-    facultyTh: 'คณะศิลปกรรมศาสตร์',
+    facultyEn: 'Fine And Applied Arts',
+    facultyTh: 'ศิลปกรรมศาสตร์',
   },
-  '36': { facultyEn: 'Faculty of Nursing', facultyTh: 'คณะพยาบาลศาสตร์' },
+  '36': { facultyEn: 'Nursing', facultyTh: 'พยาบาลศาสตร์' },
   '37': {
-    facultyEn: 'Faculty of Allied Health Sciences',
-    facultyTh: 'คณะสหเวชศาสตร์',
+    facultyEn: 'Allied Health Sciences',
+    facultyTh: 'สหเวชศาสตร์',
   },
-  '38': { facultyEn: 'Faculty of Psychology', facultyTh: 'คณะจิตวิทยา' },
+  '38': { facultyEn: 'Psychology', facultyTh: 'จิตวิทยา' },
   '39': {
-    facultyEn: 'Faculty of Sports Science',
-    facultyTh: 'คณะวิทยาศาสตร์การกีฬา',
+    facultyEn: 'Sports Science',
+    facultyTh: 'วิทยาศาสตร์การกีฬา',
   },
   '40': {
     facultyEn: 'School of Agricultural Resources',
@@ -90,71 +90,71 @@ export const facultyList = {
 export const facultySelectionList = [
   {
     value: FacultyID.ENGINEER,
-    content: 'คณะวิศวกรรมศาสตร์',
+    content: 'วิศวกรรมศาสตร์',
   },
   {
     value: FacultyID.ARTS,
-    content: 'คณะอักษรศาสตร์',
+    content: 'อักษรศาสตร์',
   },
   {
     value: FacultyID.SCIENCE,
-    content: 'คณะวิทยาศาสตร์',
+    content: 'วิทยาศาสตร์',
   },
   {
     value: FacultyID.POLITICAL_SCIENCE,
-    content: 'คณะรัฐศาสตร์',
+    content: 'รัฐศาสตร์',
   },
   {
     value: FacultyID.ARCHITECTURE,
-    content: 'คณะสถาปัตยกรรมศาสตร์',
+    content: 'สถาปัตยกรรมศาสตร์',
   },
   {
     value: FacultyID.COMMERCE_ACCOUNTANCY,
-    content: 'คณะพาณิชยศาสตร์และการบัญชี',
+    content: 'พาณิชยศาสตร์และการบัญชี',
   },
   {
     value: FacultyID.EDUCATION,
-    content: 'คณะครุศาสตร์',
+    content: 'ครุศาสตร์',
   },
   {
     value: FacultyID.ECONOMICS,
-    content: 'คณะเศรษฐศาสตร์',
+    content: 'เศรษฐศาสตร์',
   },
   {
     value: FacultyID.MEDICINE,
-    content: 'คณะแพทยศาสตร์',
+    content: 'แพทยศาสตร์',
   },
   {
     value: FacultyID.VETERINARY_SCIENCE,
-    content: 'คณะสัตวแพทยศาสตร์',
+    content: 'สัตวแพทยศาสตร์',
   },
   {
     value: FacultyID.DENTISTRY,
-    content: 'คณะทันตแพทยศาสตร์',
+    content: 'ทันตแพทยศาสตร์',
   },
   {
     value: FacultyID.PHARMACUTICAL,
-    content: 'คณะสัตวแพทยศาสตร์',
+    content: 'สัตวแพทยศาสตร์',
   },
   {
     value: FacultyID.LAW,
-    content: 'คณะนิติศาสตร์',
+    content: 'นิติศาสตร์',
   },
   {
     value: FacultyID.FINE_ARTS,
-    content: 'คณะศิลปกรรมศาสตร์',
+    content: 'ศิลปกรรมศาสตร์',
   },
   {
     value: FacultyID.NURSING,
-    content: 'คณะพยาบาลศาสตร์',
+    content: 'พยาบาลศาสตร์',
   },
   {
     value: FacultyID.PSYCHOLOGY,
-    content: 'คณะจิตวิทยา',
+    content: 'จิตวิทยา',
   },
   {
     value: FacultyID.SPORT_SCIENCE,
-    content: 'คณะวิทยาศาสตร์การกีฬา',
+    content: 'วิทยาศาสตร์การกีฬา',
   },
   {
     value: FacultyID.AGRICULTURAL_RESOURCES,
