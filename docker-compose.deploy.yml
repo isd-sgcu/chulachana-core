@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     hostname: chulachana
-    build: ./
+    image: ghcr.io/isd-sgcu/chulachana-core:latest
     deploy:
       mode: replicated
       replicas: 1
