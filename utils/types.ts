@@ -28,8 +28,8 @@ export interface PointUserDto {
 export interface UserInfo {
   phone: string
   name: string
-  faculty: FacultyID
-  year: Year
+  faculty?: FacultyID
+  year?: Year
 }
 
 export interface Entry {
