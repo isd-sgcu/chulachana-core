@@ -17,9 +17,10 @@ model Event {
   primaryColor   String
   secondaryColor String
 
-  roles        Role[]
-  entries      Entry[]
-  currentUsers UserInEvent[]
+  roles         Role[]
+  entries       Entry[]
+  currentUsers  UserInEvent[]
+  userCountLogs UserCountLog[]
 }
 
 model Role {
@@ -31,6 +32,7 @@ model Role {
   name          String
   entries       Entry[]
   currentEvents UserInEvent[]
+  userCountLogs UserCountLog[]
 }
 
 model User {
@@ -67,6 +69,17 @@ model Entry {
 
   timestamp DateTime  @default(now())
   type      EntryType
+}
+
+model UserCountLog {
+  id      Int    @id @default(autoincrement())
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String
+  role    Role   @relation(fields: [roleId], references: [id])
+  roleId  Int
+
+  timestamp DateTime @default(now())
+  count     Int
 }
 
 enum EntryType {

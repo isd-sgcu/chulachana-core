@@ -1,0 +1,13 @@
+name: Log current user count to DB
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger log API
+        run: curl -X POST -d {} https://cucheck.in/api/log/userCount

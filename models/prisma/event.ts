@@ -3,6 +3,7 @@ import { prisma } from '../clients'
 
 export type EventInfo = Event & {
   roles: {
+    id: number
     slug: string
     name: string
   }[]
@@ -13,6 +14,7 @@ export async function getEvents(): Promise<EventInfo[]> {
     include: {
       roles: {
         select: {
+          id: true,
           slug: true,
           name: true,
         },
@@ -49,4 +51,14 @@ export async function ensureEventExists(eventId: string) {
   if (event == 0) {
     throw new Error(`Event ${eventId} does not exist`)
   }
+}
+
+export async function countCurrentUsers(eventId: string, roleId?: number) {
+  const count = await prisma.userInEvent.count({
+    where: {
+      eventId,
+      roleId,
+    },
+  })
+  return count
 }
