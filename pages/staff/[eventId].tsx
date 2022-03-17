@@ -7,6 +7,7 @@ import {
   RadioGroup,
 } from '@material-ui/core'
 import Axios from 'axios'
+import { ApiError } from 'next/dist/next-server/server/api-utils'
 import Head from 'next/head'
 import { useCallback, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
@@ -15,7 +16,6 @@ import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
 import { EventInfo, getEventInfo } from '../../models/prisma/event'
 import { Config } from '../../utils/config'
-import { ApiError } from '../../utils/error'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 const client = Axios.create({ withCredentials: true })

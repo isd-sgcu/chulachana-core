@@ -4,37 +4,12 @@
 
 import { Year } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { ApiError } from 'next/dist/next-server/server/api-utils'
 import validator from 'validator'
 import { check } from '../../../api/check'
 import { findLatestEntryWithUser } from '../../../models/prisma/entry'
 import { Config } from '../../../utils/config'
 import { FacultyID, Type } from '../../../utils/enum'
-import { ApiError } from '../../../utils/error'
-
-/*
- * Check In API
- * POST /api/checkin
- *
- * <--Request-->
- * Content-Type: application/json
- * Body: {
- *  eventid: string   // All alpha-numeric
- *  phone: string     // TH Mobile Phone format without dash (0xxxxxxxx)
- *  role: "visitor" | "staff" | "shop"
- * }
- *
- * <--Response-->
- * Content-Type: application/json
- * Body: {
- *  checkin: Date    // Return Checkin Date&Time in ISO8601 Format (UTC)
- * }
- *
- * <--Status Code-->
- * 200: Success
- * 400: Bad Request
- * 404: Invalid Method, EventID Not Found
- * 500: Internal Server (When writing into database)
- */
 
 export interface CheckInDto {
   eventId: string

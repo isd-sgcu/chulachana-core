@@ -1,5 +1,4 @@
 import { Event } from '@prisma/client'
-import { ApiError } from '../../utils/error'
 import { prisma } from '../clients'
 
 export type EventInfo = Event & {
@@ -48,6 +47,6 @@ export async function ensureEventExists(eventId: string) {
     },
   })
   if (event == 0) {
-    throw new ApiError(404, `Event ${eventId} does not exist`)
+    throw new Error(`Event ${eventId} does not exist`)
   }
 }

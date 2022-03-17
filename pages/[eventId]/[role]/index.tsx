@@ -1,5 +1,6 @@
 import { Button, makeStyles } from '@material-ui/core'
 import { CircularProgress } from '@mui/material'
+import { Year } from '@prisma/client'
 import Head from 'next/head'
 import Router from 'next/router'
 import React, { useCallback, useEffect } from 'react'

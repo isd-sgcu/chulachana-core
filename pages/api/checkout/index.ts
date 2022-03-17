@@ -4,38 +4,12 @@
 
 import { Entry } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { ApiError } from 'next/dist/next-server/server/api-utils'
 import validator from 'validator'
 import { check } from '../../../api/check'
 import { findLatestEntryWithUser } from '../../../models/prisma/entry'
 import { Config } from '../../../utils/config'
 import { Type } from '../../../utils/enum'
-import { ApiError } from '../../../utils/error'
-
-/*
- * Check In API
- * POST /api/checkout
- *
- * <--Request-->
- * Content-Type: application/json
- * Body: {
- *  eventid: string   // All alpha-numeric
- *  phone: string     // TH Mobile Phone format without dash (0xxxxxxxx)
- *  type: "normal" | "staff" | "shop"
- * }
- *
- * <--Response-->
- * Content-Type: application/json
- * Body: {
- *  checkin: Date | null    // Return Checkin Date&Time in ISO8601 Format (UTC) (null if the phone hadn't checkin once)
- *  checkout: Date          // Return Checkout Date&Time in ISO8601 Format (UTC)
- * }
- *
- * <--Status Code-->
- * 200: Success
- * 400: Bad Request
- * 404: Invalid Method, EventID Not Found
- * 500: Internal Server (When writing into database)
- */
 
 export interface CheckOutDto {
   eventId: string
