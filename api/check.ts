@@ -20,6 +20,9 @@ export async function check(
   let user: User = await findUserByPhone(checkinDto.phone)
 
   if (!user) {
+    if (!checkinDto.name) {
+      throw new ApiError(400, 'Name is required')
+    }
     user = await createUser({
       faculty: checkinDto.faculty,
       name: checkinDto.name,

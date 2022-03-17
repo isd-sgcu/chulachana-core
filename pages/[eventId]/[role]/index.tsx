@@ -100,7 +100,8 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
           setIsReady(true)
         }
       } catch (err) {
-        alert(err.response.data)
+        setIsReady(true)
+        console.log({ err })
       }
     }
     checkIn()
@@ -128,27 +129,29 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
         <title>เช็คอินเข้างาน {eventInfo.name}</title>
       </Head>
       <PageLayout wavesComponent={CheckInFormWaves}>
-        <h3 className={classes.checkInHint}>เช็คอินเข้างาน</h3>
-        <EventTitle eventInfo={eventInfo} role={role} />
         {isReady ? (
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <div className={classes.inputContainer}>
-                <PhoneField />
-                <NameField />
-              </div>
-              <div className={classes.buttonContainer}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                >
-                  เช็คอิน!
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
+          <>
+            <h3 className={classes.checkInHint}>เช็คอินเข้างาน</h3>
+            <EventTitle eventInfo={eventInfo} role={role} />
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(onSubmit)}>
+                <div className={classes.inputContainer}>
+                  <PhoneField />
+                  <NameField />
+                </div>
+                <div className={classes.buttonContainer}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                  >
+                    เช็คอิน!
+                  </Button>
+                </div>
+              </form>
+            </FormProvider>
+          </>
         ) : (
           <div className={classes.spinner}>
             <CircularProgress />
