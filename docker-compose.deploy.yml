@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app:
-    container_name: chulachana
+    hostname: chulachana
     build: .
     deploy:
       mode: replicated
