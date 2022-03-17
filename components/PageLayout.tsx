@@ -1,4 +1,5 @@
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
+import Router from 'next/router'
 import { ComponentType, CSSProperties, PropsWithChildren } from 'react'
 import { apiClient } from '../axios/client'
 import Footer from './Footer'
@@ -123,6 +124,11 @@ function ClearCookiesButton() {
     try {
       await apiClient.clearCookies()
       alert('เคลียร์คุกกี้เรียบร้อยแล้ว')
+      let { pathname } = location
+      if (pathname.endsWith('/success')) {
+        pathname = pathname.replace(RegExp('/success$'), '')
+      }
+      Router.push(pathname)
     } catch (err) {
       alert(err)
     }
