@@ -95,9 +95,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const checkinDate: Date = await check(checkinDto, Type.IN)
 
     const config = new Config(req, res)
-    const phone = checkinDto.phone || config.get('core', 'phone')
 
-    config.set('core', 'phone', phone)
+    config.set('core', 'phone', checkinDto.phone)
     config.set(checkinDto.eventId, 'checkInTimestamp', checkinDate.getTime())
     config.set(checkinDto.eventId, 'checkOutTimestamp', null)
 
