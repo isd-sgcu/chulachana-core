@@ -1,12 +1,6 @@
 import { Year } from '@prisma/client'
 import { FacultyID } from './enum'
 
-export const allowedCorsDomains = [
-  'http://localhost:3000',
-  'https://loykrathongcu.com',
-  'https://dev.loykrathongcu.com',
-]
-
 export const facultyList = {
   '20': { facultyEn: 'Graduate School', facultyTh: 'บัณฑิตวิทยาลัย' },
   '21': { facultyEn: 'Engineering', facultyTh: 'วิศวกรรมศาสตร์' },

@@ -9,7 +9,7 @@ import { check } from '../../../api/check'
 import { findLatestEntryWithUser } from '../../../models/prisma/entry'
 import { Config } from '../../../utils/config'
 import { Type } from '../../../utils/enum'
-import { ApiError } from '../../../utils/types'
+import { ApiError } from '../../../utils/error'
 
 /*
  * Check In API

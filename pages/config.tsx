@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { PageLayout } from '../components/PageLayout'
 import { ensureEventExists } from '../models/prisma/event'
 import { Config, CoreConfig, EventConfig } from '../utils/config'
-import { ApiError } from '../utils/types'
+import { ApiError } from '../utils/error'
 import { getErrorPageProps, withErrorPage } from '../utils/withErrorPage'
 
 interface ConfigPageProps {

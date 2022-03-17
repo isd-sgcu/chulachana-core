@@ -1,5 +1,5 @@
 import { Event } from '@prisma/client'
-import { ApiError } from '../../utils/types'
+import { ApiError } from '../../utils/error'
 import { prisma } from '../clients'
 
 export type EventInfo = Event & {

@@ -15,7 +15,7 @@ import { PageLayout } from '../../components/PageLayout'
 import { PhoneField } from '../../components/PhoneField'
 import { EventInfo, getEventInfo } from '../../models/prisma/event'
 import { Config } from '../../utils/config'
-import { ApiError } from '../../utils/types'
+import { ApiError } from '../../utils/error'
 import { getErrorPageProps, withErrorPage } from '../../utils/withErrorPage'
 
 const client = Axios.create({ withCredentials: true })

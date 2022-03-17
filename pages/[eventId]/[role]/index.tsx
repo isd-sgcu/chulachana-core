@@ -13,7 +13,7 @@ import { PageLayout } from '../../../components/PageLayout'
 import { PhoneField } from '../../../components/PhoneField'
 import { EventInfo, getEventInfo } from '../../../models/prisma/event'
 import { Config } from '../../../utils/config'
-import { CheckInData } from '../../../utils/types'
+import { FacultyID } from '../../../utils/enum'
 import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 interface CheckInPageProps {
@@ -61,7 +61,13 @@ const useStyles = makeStyles({
   },
 })
 
-// TODO: use this page for checkin/checkout only, and move the form to another page
+export interface CheckInFormData {
+  phone: string
+  name: string
+  faculty: FacultyID
+  year: Year
+}
+
 function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   const classes = useStyles()
   const methods = useForm({
@@ -106,7 +112,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
     checkIn()
   }, [phone, eventId, role, Router])
 
-  const onSubmit = useCallback(async (data: CheckInData) => {
+  const onSubmit = useCallback(async (data: CheckInFormData) => {
     const res = await apiClient.checkIn({
       eventId,
       role,
