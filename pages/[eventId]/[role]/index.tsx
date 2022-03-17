@@ -1,10 +1,10 @@
 import { Button, makeStyles } from '@material-ui/core'
-import { Divider } from '@mui/material'
+import { CircularProgress, Divider } from '@mui/material'
 import Head from 'next/head'
 import Router from 'next/router'
-import { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { apiClient, CheckInResponse } from '../../../axios/client'
+import { apiClient } from '../../../axios/client'
 import { CheckInFormWaves } from '../../../components/CheckInFormWaves'
 import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
@@ -15,7 +15,7 @@ import { PhoneField } from '../../../components/PhoneField'
 import { YearField } from '../../../components/YearField'
 import { EventInfo, getEventInfo } from '../../../models/prisma/event'
 import { Config } from '../../../utils/config'
-import { CheckInData, ErrorResponse } from '../../../utils/types'
+import { CheckInData } from '../../../utils/types'
 import { getErrorPageProps, withErrorPage } from '../../../utils/withErrorPage'
 
 interface CheckInPageProps {
@@ -54,6 +54,12 @@ const useStyles = makeStyles({
     marginTop: 15,
     textAlign: 'center',
   },
+  spinner: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: 80,
+  },
 })
 
 // TODO: use this page for checkin/checkout only, and move the form to another page
@@ -62,6 +68,8 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   const methods = useForm({
     reValidateMode: 'onChange',
   })
+
+  const [isReady, setIsReady] = React.useState<boolean>(false)
 
   //FIXME: component render before response complete validate
   useEffect(() => {
@@ -74,6 +82,8 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
 
       if (res.data.checkIn || res.status === 403) {
         Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
+      } else {
+        setIsReady(true)
       }
     }
     checkIn()
@@ -104,29 +114,35 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       <PageLayout wavesComponent={CheckInFormWaves}>
         <h3 className={classes.checkInHint}>เช็คอินเข้างาน</h3>
         <EventTitle eventInfo={eventInfo} role={role} />
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <div className={classes.inputContainer}>
-              <PhoneField />
-              <NameField />
-              <Divider textAlign="left">เฉพาะนิสิต</Divider>
-              <div className={classes.subContainer}>
-                <FacultyField />
-                <YearField />
+        {isReady ? (
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <div className={classes.inputContainer}>
+                <PhoneField />
+                <NameField />
+                <Divider textAlign="left">เฉพาะนิสิต</Divider>
+                <div className={classes.subContainer}>
+                  <FacultyField />
+                  <YearField />
+                </div>
               </div>
-            </div>
-            <div className={classes.buttonContainer}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disableElevation
-              >
-                เช็คอิน!
-              </Button>
-            </div>
-          </form>
-        </FormProvider>
+              <div className={classes.buttonContainer}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                >
+                  เช็คอิน!
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        ) : (
+          <div className={classes.spinner}>
+            <CircularProgress />
+          </div>
+        )}
       </PageLayout>
     </EventProvider>
   )
