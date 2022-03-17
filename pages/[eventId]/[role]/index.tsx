@@ -66,13 +66,16 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   //FIXME: component render before response complete validate
   useEffect(() => {
     const checkIn = async () => {
-      const res: CheckInResponse = await apiClient.checkIn({
+      const res: unknown = await apiClient.checkIn({
         eventId,
         role,
         phone,
       })
 
-      if (res.checkin || (res as ErrorResponse).statusCode === 403) {
+      if (
+        (res as CheckInResponse).checkin ||
+        (res as ErrorResponse).statusCode === 403
+      ) {
         Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
       }
     }
@@ -80,7 +83,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
   }, [])
 
   const onSubmit = useCallback(async (data: CheckInData) => {
-    const res: CheckInResponse = await apiClient.checkIn({
+    const res: unknown = await apiClient.checkIn({
       eventId,
       role,
       phone: data.phone,
@@ -88,9 +91,9 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       faculty: data.faculty,
       year: data.year,
     })
-    if (!res.checkin) {
+    if (!(res as CheckInResponse).checkin) {
       //TODO: Display the error message on UI
-      console.log((res as unknown as ErrorResponse).content)
+      console.log((res as ErrorResponse).content)
     }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
@@ -139,7 +142,19 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
     const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
-    const phone = config.get('core', 'phone')
+    let phone = config.get('core', 'phone') || null
+
+    const check = eventInfo.roles.find((item) => item.slug === role)
+
+    if (!check) {
+      return {
+        unstable_redirect: {
+          permanent: false,
+          destination: `/notfound`,
+        },
+      }
+    }
+
     return {
       props: {
         eventId,

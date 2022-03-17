@@ -29,6 +29,11 @@ export async function findLatestEntryWithUser(phone: string) {
           faculty: true,
         },
       },
+      role: {
+        select: {
+          slug: true,
+        },
+      },
     },
   })
   return entry
