@@ -1,4 +1,4 @@
-import { Entry, EntryType, Prisma, Role, User } from '@prisma/client'
+import { EntryType, Role, User } from '@prisma/client'
 import { createEntry, dtoToRawEntry } from '../models/prisma/entry'
 import { EventInfo, getEventInfo } from '../models/prisma/event'
 import { createUser, findUserByPhone } from '../models/prisma/user'
@@ -25,21 +25,15 @@ export async function check(
   const role = event.roles.find((role) => role.slug === checkinDto.role)
 
   // Database Writing
-  let user: User
-  try {
+  let user: User = await findUserByPhone(checkinDto.phone)
+
+  if (!user) {
     user = await createUser(userInfo)
-  } catch (err) {
-    user = await findUserByPhone(checkinDto.phone)
   }
 
-  const entryInfo: Prisma.EntryCreateInput = await dtoToRawEntry(
-    checkinDto,
-    user,
-    role as Role,
-    type
-  )
+  const entryInfo = await dtoToRawEntry(checkinDto, user, role as Role, type)
 
-  const entry: Entry = await createEntry(entryInfo)
+  const entry = await createEntry(entryInfo)
 
   return new Date(entry.timestamp)
 }
