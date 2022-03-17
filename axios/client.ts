@@ -6,12 +6,12 @@ import { ErrorResponse } from '../utils/types'
 const client = axios.create({ withCredentials: true })
 
 export interface CheckInResponse {
-  checkin: Date
+  checkIn: Date
 }
 
 export interface CheckOutResponse {
-  checkin: Date
-  checkout: Date
+  checkIn: Date
+  checkOut: Date
 }
 
 const checkIn = async (
