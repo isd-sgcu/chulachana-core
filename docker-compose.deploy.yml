@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     hostname: chulachana
-    build: .
+    build: ./
     deploy:
       mode: replicated
       replicas: 1
