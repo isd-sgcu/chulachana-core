@@ -86,7 +86,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await check(data, Type.OUT)
       } else {
         throw new ApiError(
-          403,
+          409,
           'You already checked in at this event. Please check out first.'
         )
       }
