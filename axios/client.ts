@@ -27,7 +27,15 @@ const checkOut = async (
   return res
 }
 
+const check = async (
+  checkInDto: CheckInDto
+): Promise<AxiosResponse<CheckOutResponse>> => {
+  const res = await client.post('/api/check', checkInDto)
+  return res
+}
+
 export const apiClient = {
   checkIn,
   checkOut,
+  check,
 }

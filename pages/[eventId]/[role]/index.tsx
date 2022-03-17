@@ -85,7 +85,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       }
 
       try {
-        const res = await apiClient.checkIn({
+        const res = await apiClient.check({
           eventId,
           role,
           phone,
@@ -100,13 +100,6 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
           setIsReady(true)
         }
       } catch (err) {
-        if (err.response.status === 409) {
-          Router.push(
-            '/[eventId]/[role]/success',
-            `/${eventId}/${role}/success`
-          )
-          return
-        }
         alert(err.response.data)
       }
     }
