@@ -35,5 +35,5 @@ export async function check(
 
   const entry = await createEntry(entryInfo)
 
-  return new Date(entry.timestamp)
+  return entry.timestamp
 }
