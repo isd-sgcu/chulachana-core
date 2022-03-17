@@ -4,9 +4,9 @@
 
 import { UserCountLog } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { ApiError } from 'next/dist/next-server/server/api-utils'
 import { countCurrentUsers, getEvents } from '../../../models/prisma/event'
 import { createUserCountLog } from '../../../models/prisma/log'
-import { ApiError } from '../../../utils/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
