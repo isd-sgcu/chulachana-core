@@ -23,6 +23,7 @@ interface CheckInPageProps {
   role: string
   eventInfo: EventInfo
   phone: string
+  errorCode?: number
 }
 
 const useStyles = makeStyles({
@@ -73,20 +74,39 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
 
   useEffect(() => {
     const checkIn = async () => {
-      const res = await apiClient.checkIn({
-        eventId,
-        role,
-        phone,
-      })
-
-      if (res.data.checkIn || res.status === 403) {
-        Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
-      } else {
+      if (!phone) {
         setIsReady(true)
+        return
+      }
+
+      try {
+        const res = await apiClient.checkIn({
+          eventId,
+          role,
+          phone,
+        })
+
+        if (res.data.checkIn) {
+          Router.push(
+            '/[eventId]/[role]/success',
+            `/${eventId}/${role}/success`
+          )
+        } else {
+          setIsReady(true)
+        }
+      } catch (err) {
+        if (err.response.status === 409) {
+          Router.push(
+            '/[eventId]/[role]/success',
+            `/${eventId}/${role}/success`
+          )
+          return
+        }
+        alert(err.response.data)
       }
     }
     checkIn()
-  }, [])
+  }, [phone, eventId, role, Router])
 
   const onSubmit = useCallback(async (data: CheckInData) => {
     const res = await apiClient.checkIn({
@@ -98,7 +118,6 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
       year: data.year,
     })
     if (!res.data.checkIn) {
-      //TODO: Display the error message on UI
       alert(res.data)
     }
 
@@ -154,15 +173,18 @@ export const getServerSideProps = getErrorPageProps<CheckInPageProps>(
     const { eventId, role } = query as Record<string, string>
     const eventInfo = await getEventInfo(eventId)
     const config = new Config(req, res)
-    let phone = config.get('core', 'phone') || null
+    const phone = config.get('core', 'phone') || null
 
     const check = eventInfo.roles.find((item) => item.slug === role)
 
     if (!check) {
       return {
-        unstable_redirect: {
-          permanent: false,
-          destination: `/notfound`,
+        props: {
+          eventId: null,
+          role: null,
+          eventInfo: null,
+          phone: null,
+          errorCode: 404,
         },
       }
     }

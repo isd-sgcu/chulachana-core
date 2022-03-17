@@ -23,12 +23,6 @@ export interface SuccessPageProps {
   eventInfo: EventInfo
 }
 
-export interface CheckOutDto {
-  eventId: string
-  role: string
-  phone: string
-}
-
 const useStyles = makeStyles({
   container: {
     display: 'flex',
@@ -95,16 +89,13 @@ const handleClick = async (phone, role, eventId, isCheckout) => {
     role,
   }
 
-  if (!isCheckout) {
-    await apiClient.checkOut(data)
-  } else {
+  if (isCheckout) {
     await apiClient.checkIn(data)
+  } else {
+    await apiClient.checkOut(data)
   }
 
-  Router.push(
-    `/[eventId]/[role]/success?action=${isCheckout ? 'checkin' : 'checkout'}`,
-    `/${eventId}/${role}/success?action=${isCheckout ? 'checkin' : 'checkout'}`
-  )
+  Router.push(`/[eventId]/[role]/success`, `/${eventId}/${role}/success`)
 }
 
 function SuccessPage({
