@@ -19,7 +19,7 @@ permissions:
 
 env:
   IMAGE_REPO: ghcr.io/${{ github.repository }}
-  STACK_WEBHOOK_URL: https://portainer.isd.saenyakorn.dev/api/stacks/webhooks/7bc97c2b-e19a-4228-b5c2-4021f45572bd
+  STACK_WEBHOOK_URL: https://portainer.isd.saenyakorn.dev/api/stacks/webhooks/a3afba79-9d00-4cf5-82eb-241fd34804d2
 
 jobs:
   publish-image:
