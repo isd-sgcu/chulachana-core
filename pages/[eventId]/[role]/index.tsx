@@ -1,5 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core'
-import { CircularProgress, Divider } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 import Head from 'next/head'
 import Router from 'next/router'
 import React, { useCallback, useEffect } from 'react'
@@ -8,11 +8,9 @@ import { apiClient } from '../../../axios/client'
 import { CheckInFormWaves } from '../../../components/CheckInFormWaves'
 import { EventProvider } from '../../../components/EventProvider'
 import { EventTitle } from '../../../components/EventTitle'
-import { FacultyField } from '../../../components/FacultyField'
 import { NameField } from '../../../components/NameField'
 import { PageLayout } from '../../../components/PageLayout'
 import { PhoneField } from '../../../components/PhoneField'
-import { YearField } from '../../../components/YearField'
 import { EventInfo, getEventInfo } from '../../../models/prisma/event'
 import { Config } from '../../../utils/config'
 import { CheckInData } from '../../../utils/types'
@@ -138,11 +136,11 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
               <div className={classes.inputContainer}>
                 <PhoneField />
                 <NameField />
-                <Divider textAlign="left">เฉพาะนิสิต</Divider>
+                {/* <Divider textAlign="left">เฉพาะนิสิต</Divider>
                 <div className={classes.subContainer}>
                   <FacultyField />
                   <YearField />
-                </div>
+                </div> */}
               </div>
               <div className={classes.buttonContainer}>
                 <Button
