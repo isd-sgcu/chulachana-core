@@ -96,7 +96,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     config.set(checkinDto.eventId, 'checkInTimestamp', checkinDate.getTime())
     config.set(checkinDto.eventId, 'checkOutTimestamp', null)
 
-    res.json({ checkin: checkinDate })
+    res.json({ checkIn: checkinDate })
   } else {
     // Other than POST Method
     throw new ApiError(404, 'Not Found')

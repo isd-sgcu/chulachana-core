@@ -10,7 +10,6 @@ import { findLatestEntryWithUser } from '../../../models/prisma/entry'
 import { Config } from '../../../utils/config'
 import { Type } from '../../../utils/enum'
 import { ApiError } from '../../../utils/types'
-import { CheckinDTO } from '../checkin'
 
 /*
  * Check In API
@@ -37,6 +36,13 @@ import { CheckinDTO } from '../checkin'
  * 404: Invalid Method, EventID Not Found
  * 500: Internal Server (When writing into database)
  */
+
+export interface CheckOutDto {
+  eventId: string
+  role: string
+  phone: string
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const checkinDto = req.body as CheckOutDto
@@ -70,8 +76,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     config.set(checkinDto.eventId, 'checkOutTimestamp', checkoutDate.getTime())
 
     res.json({
-      checkin: checkinDate,
-      checkout: checkoutDate,
+      checkIn: checkinDate,
+      checkOut: checkoutDate,
     })
   } else {
     // Other than POST Method
