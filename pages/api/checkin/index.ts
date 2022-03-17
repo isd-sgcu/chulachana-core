@@ -69,11 +69,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       checkinDto.eventId
     )
 
-    if (
-      entry &&
-      entry.type === Type.IN &&
-      entry.eventId === checkinDto.eventId
-    ) {
+    if (entry && entry.type === Type.IN) {
       if (entry.role.slug !== checkinDto.role) {
         const data = {
           eventId: checkinDto.eventId,
