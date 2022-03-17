@@ -10,4 +10,4 @@ jobs:
 
     steps:
       - name: Trigger log API
-        run: curl -X POST -d {} https://cucheck.in/api/log/userCount
+        run: curl -X POST -d {} https://cucheck.in/api/log/usercount
