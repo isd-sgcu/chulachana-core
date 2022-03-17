@@ -120,56 +120,6 @@ async function seed() {
     slug: 'extstaff',
     name: 'เจ้าหน้าที่ภายนอก',
   })
-
-  const user1 = await upsertUser({
-    phone: '0812345678',
-    name: 'John Doe',
-  })
-  const user2 = await upsertUser({
-    phone: '0823456789',
-    name: 'Jane Doe',
-  })
-  const user3 = await upsertUser({
-    phone: '0834567890',
-    name: 'Jack Doe',
-  })
-
-  await check({
-    user: user1,
-    event,
-    role: roleVisitor,
-    type: EntryType.IN,
-  })
-  await check({
-    user: user2,
-    event,
-    role: roleCUStaff,
-    type: EntryType.IN,
-  })
-  await check({
-    user: user2,
-    event,
-    role: roleCUStaff,
-    type: EntryType.OUT,
-  })
-  await check({
-    user: user1,
-    event,
-    role: roleVisitor,
-    type: EntryType.OUT,
-  })
-  await check({
-    user: user1,
-    event,
-    role: roleVisitor,
-    type: EntryType.IN,
-  })
-  await check({
-    user: user3,
-    event,
-    role: roleExtStaff,
-    type: EntryType.IN,
-  })
 }
 
 seed()
