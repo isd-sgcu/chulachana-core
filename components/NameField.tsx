@@ -35,7 +35,6 @@ export function NameField({
           error={error}
           helperText={error ? 'กรุณากรอกชื่อของคุณ' : undefined}
           disabled={disabled}
-          autoFocus
           fullWidth
         />
       )}

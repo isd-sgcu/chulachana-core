@@ -37,7 +37,6 @@ export function FacultyField({
           error={error}
           helperText={error ? 'กรุณาเลือกคณะ' : undefined}
           disabled={disabled}
-          autoFocus
           select
           fullWidth
         >

@@ -37,7 +37,6 @@ export function YearField({
           error={error}
           helperText={error ? 'กรุณาเลือกชั้นปี' : undefined}
           disabled={disabled}
-          autoFocus
           fullWidth
           select
         >
