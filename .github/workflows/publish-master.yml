@@ -19,7 +19,7 @@ permissions:
 
 env:
   IMAGE_REPO: ghcr.io/${{ github.repository }}
-  STACK_WEBHOOK_URL: https://portainer.isd.saenyakorn.dev/api/stacks/webhooks/a3afba79-9d00-4cf5-82eb-241fd34804d2
+  SERVICE_WEBHOOK_URL: https://portainer.isd.saenyakorn.dev/api/webhooks/47f2267b-30ad-4aff-8f3c-604e476d65a8
 
 jobs:
   publish-image:
@@ -63,4 +63,4 @@ jobs:
           context: .
 
       - name: Trigger redeploy
-        run: curl -X POST ${{ env.STACK_WEBHOOK_URL}}
+        run: curl -X POST ${{ env.SERVICE_WEBHOOK_URL}}
