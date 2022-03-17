@@ -1,20 +1,9 @@
-import { Role, Year } from '@prisma/client'
+import { Year } from '@prisma/client'
 import { ApiError } from 'next/dist/next-server/server/api-utils'
 import { FacultyID } from './enum'
 export { ApiError }
 
-export interface ErrorResponse {
-  content: string
-  statusCode: number
-}
-
 export type PersonType = 'normal' | 'staff' | 'shop'
-export interface CheckDto {
-  eventid: string
-  phone: string
-  type: PersonType
-}
-
 export interface PointUserDto {
   _time: Date
   _measurement: 'user'
@@ -30,15 +19,6 @@ export interface UserInfo {
   name: string
   faculty?: FacultyID
   year?: Year
-}
-
-export interface Entry {
-  _time: Date
-  eventid: string
-  phone: string
-  name: string
-  faculty: string
-  role: Role
 }
 
 export interface CheckInData {
