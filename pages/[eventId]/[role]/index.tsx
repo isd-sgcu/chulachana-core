@@ -71,7 +71,6 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
 
   const [isReady, setIsReady] = React.useState<boolean>(false)
 
-  //FIXME: component render before response complete validate
   useEffect(() => {
     const checkIn = async () => {
       const res = await apiClient.checkIn({
@@ -100,7 +99,7 @@ function CheckInPage({ eventId, role, eventInfo, phone }: CheckInPageProps) {
     })
     if (!res.data.checkIn) {
       //TODO: Display the error message on UI
-      console.log(res.data)
+      alert(res.data)
     }
 
     Router.push('/[eventId]/[role]/success', `/${eventId}/${role}/success`)
