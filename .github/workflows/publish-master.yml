@@ -50,7 +50,7 @@ jobs:
           images: ${{ env.IMAGE_REPO }}
           tags: |
             type=ref,event=branch
-            type=sha
+            type=sha,prefix={{branch}}@sha256:,format=long
 
       - name: Build and push to GitHub Packages
         uses: docker/build-push-action@v2
