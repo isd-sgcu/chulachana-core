@@ -65,15 +65,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const entry = await findLatestEntryWithUser(checkinDto.phone)
+
     if (
       entry &&
       entry.type === Type.IN &&
       entry.eventId === checkinDto.eventId
     ) {
-      throw new ApiError(
-        403,
-        'You already checked in at this event. Please check out first.'
-      )
+      if (entry.role.slug !== checkinDto.role) {
+        const data = {
+          eventId: checkinDto.eventId,
+          role: entry.role.slug,
+          phone: checkinDto.phone,
+          name: checkinDto.name,
+          faculty: checkinDto.faculty,
+          year: checkinDto.year,
+        }
+        await check(data, Type.OUT)
+      } else {
+        throw new ApiError(
+          403,
+          'You already checked in at this event. Please check out first.'
+        )
+      }
     }
 
     const checkinDate: Date = await check(checkinDto, Type.IN)
