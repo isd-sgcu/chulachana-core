@@ -1,6 +1,6 @@
 import { EntryType, Role, User } from '@prisma/client'
 import { ApiError } from 'next/dist/next-server/server/api-utils'
-import { createEntry, dtoToRawEntry } from '../models/prisma/entry'
+import { createEntry } from '../models/prisma/entry'
 import { EventInfo, getEventInfo } from '../models/prisma/event'
 import { createUser, findUserByPhone } from '../models/prisma/user'
 import { CheckInDto } from '../pages/api/checkin'
@@ -28,9 +28,7 @@ export async function check(
     })
   }
 
-  const entryInfo = await dtoToRawEntry(checkinDto, user, role as Role, type)
-
-  const entry = await createEntry(entryInfo)
+  const entry = await createEntry(checkinDto, user, role as Role, type)
 
   return entry.timestamp
 }

@@ -3,9 +3,40 @@ import { CheckInDto } from '../../pages/api/checkin'
 import { prisma } from '../clients'
 
 export async function createEntry(
-  entryInfo: Prisma.EntryCreateInput
+  checkInDto: CheckInDto,
+  user: User,
+  role: Role,
+  type: EntryType
 ): Promise<Entry> {
-  const entry: Entry = await prisma.entry.create({ data: entryInfo })
+  const userInEventOperation =
+    type === EntryType.IN
+      ? prisma.userInEvent.create({
+          data: {
+            userId: user.id,
+            eventId: checkInDto.eventId,
+            roleId: role.id,
+          },
+        })
+      : prisma.userInEvent.delete({
+          where: {
+            userId_eventId: {
+              userId: user.id,
+              eventId: checkInDto.eventId,
+            },
+          },
+        })
+
+  const [entry, userInEvent] = await prisma.$transaction([
+    prisma.entry.create({
+      data: {
+        userId: user.id,
+        eventId: checkInDto.eventId,
+        roleId: role.id,
+        type,
+      },
+    }),
+    userInEventOperation,
+  ])
   return entry
 }
 
