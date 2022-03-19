@@ -34,13 +34,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const logs = await Promise.all(promises)
-    console.log(
-      timestamp,
-      `Logged user count for ${events.length} events and ${events.reduce(
-        (acc, cur) => acc + cur.roles.length,
-        0
-      )} roles`
-    )
     res.json({ logs })
   } else {
     throw new ApiError(405, 'Method Not Allowed')
